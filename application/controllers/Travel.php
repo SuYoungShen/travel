@@ -38,7 +38,7 @@ class Travel extends CI_Controller {
 		// }else {
 			$this->load->view("layout", $view_data);
 		// }
-		echo "string";
+		
 	}
 
 	function attractions_place(){
