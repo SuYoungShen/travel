@@ -38,6 +38,7 @@ class Travel extends CI_Controller {
 		// }else {
 			$this->load->view("layout", $view_data);
 		// }
+		echo "string";
 	}
 
 	function attractions_place(){
@@ -188,7 +189,7 @@ class Travel extends CI_Controller {
 					$value = json_decode(json_encode($value), true);
 					// $className = "test$key";
 					// $arrayData->$className = $value;
-					
+
 				}
 
 				// $arrayData->title = "台南景點";
