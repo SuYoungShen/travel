@@ -171,72 +171,72 @@ class Travel extends CI_Controller {
 	}
 
 	function tainan(){//沒照片...
-		// $base = base_url().uri_string();
-		// if (isset($_POST["place"]) && !empty($_POST["place"]) && $_POST["place"] == "tainan") {
-		//
-		// 	$place = $_POST["place"];
-		// 	$travel = $_POST["travel"];
-		//
-		// 	if (isset($travel) && !empty($travel) && $travel == "attractions") {
+		$base = base_url().uri_string();
+		if (isset($_POST["place"]) && !empty($_POST["place"]) && $_POST["place"] == "tainan") {
+
+			$place = $_POST["place"];
+			$travel = $_POST["travel"];
+
+			if (isset($travel) && !empty($travel) && $travel == "attractions") {
 
 				$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
 				$data = json_decode($url);
-				$data = (object)$data;
-				$test = array();
 				$arrayData = new stdClass();//陣列轉換class後存自此變數
-				foreach ($data as $key =>  $value)//將陣列轉換為class
-				{
-					$value = json_decode(json_encode($value), true);
-					// $className = "test$key";
-					// $arrayData->$className = $value;
 
+				foreach ($data as $key => $value) {
+					$arrayData->data[$key] = $value;
 				}
+				// echo $arrayData->D[0]->id;
+				// echo "<pre>";
+				// var_dump($arrayData);
+				// echo "</pre>";
 
-				// $arrayData->title = "台南景點";
-				// $arrayData->Name01 = $arrayData->data0->name;//第一筆資料的名稱
-				// $arrayData->Img01 ="https://cdn.free.com.tw/blog/wp-content/uploads/2014/08/Placekitten480-g.jpg";
-				// $arrayData->Title01 = "";
-				// $arrayData->OpenTime01 = $arrayData->data0->opentime;
-				// $arrayData->Tel01 = $arrayData->data0->tel;
-				// $arrayData->FullAddress01 = $arrayData->data0->address;
-				// $arrayData->Total = count($data);
+				$arrayData->title = "台南景點";
+				$arrayData->Name01 = $arrayData->data[0]->name;//第一筆資料的名稱
+				$arrayData->Img01 ="https://cdn.free.com.tw/blog/wp-content/uploads/2014/08/Placekitten480-g.jpg";
+				$arrayData->Title01 = "";
+				$arrayData->OpenTime01 = $arrayData->data[0]->opentime;
+				$arrayData->Tel01 = $arrayData->data[0]->tel;
+				$arrayData->FullAddress01 = $arrayData->data[0]->address;
+				$arrayData->Total = count($data);
 
+				$this->output->set_content_type('application/json')->set_output(json_encode($arrayData));
+
+			}else if(isset($travel) && !empty($travel) && $travel == "food"){
+				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
+				$data = json_decode($url);
+
+				$data->title = "台南美食";
+
+				$data->Img01 = $data->result->records[0]->Picture1;
+				$data->Name01 = $data->result->records[0]->Name;
+				$data->Title01 = $data->result->records[0]->Picdescribe1;
+				$data->OpenTime01 = $data->result->records[0]->Opentime;
+				$data->Tel01 = $data->result->records[0]->Tel;
+				$data->FullAddress01 = $data->result->records[0]->Add;
 				// echo "<pre>";
 				// var_dump($data);
 				// echo "</pre>";
-				// echo $arrayData->offsetGet(0)->name;
-				// $this->output->set_content_type('application/json')->set_output(json_encode($arrayData));
+				$this->output->set_content_type('application/json')->set_output(json_encode($data));
+			}
+		}else if(word_censor($base, "http://104.199.199.61/travel/details/attractions/tainan/")){//word_censor用來檢查看看網址有無此文字
 
-		// 	}else if(isset($travel) && !empty($travel) && $travel == "food"){
-		// 		$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
-		// 		$data = json_decode($url);
-		//
-		// 		$data->title = "台南美食";
-		//
-		// 		$data->Img01 = $data->result->records[0]->Picture1;
-		// 		$data->Name01 = $data->result->records[0]->Name;
-		// 		$data->Title01 = $data->result->records[0]->Picdescribe1;
-		// 		$data->OpenTime01 = $data->result->records[0]->Opentime;
-		// 		$data->Tel01 = $data->result->records[0]->Tel;
-		// 		$data->FullAddress01 = $data->result->records[0]->Add;
-		// 		// echo "<pre>";
-		// 		// var_dump($data);
-		// 		// echo "</pre>";
-		// 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
-		// 	}
-		// }else if($base == "http://104.199.199.61/tainan/attractions"){//用來看景點資料
-		//
-		// 	$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
-		// 	$data = json_decode($url);
-		// 	$this->output->set_content_type('application/json')->set_output(json_encode($data));
-		//
-		// }else if($base == "http://104.199.199.61/tainan/food"){
-		//
-		// 	$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
-		// 	$data = json_decode($url);
-		// 	$this->output->set_content_type('application/json')->set_output(json_encode($data));
-		//
-		// }
+			$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
+			$data = json_decode($url);
+			$arrayData = new stdClass();//陣列轉換class後存自此變數
+			foreach ($data as $key => $value) {
+				$arrayData->data[$key] = $value;
+			}
+			// var_dump($arrayData);
+			$this->output->set_content_type('application/json')->set_output(json_encode($arrayData));
+
+		}else if($base == "http://104.199.199.61/tainan/food"){
+
+			$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
+			$data = json_decode($url);
+			$this->output->set_content_type('application/json')->set_output(json_encode($data));
+
+		}
 	}
 
 	function alltaiwan(){
@@ -264,7 +264,7 @@ class Travel extends CI_Controller {
 		$data->Tel01 = $this->noempty("", $Tel01);
 		$data->FullAddress01 = $this->noempty("", $FullAddress01);
 
-		$this->output->set_content_type('application/json')->set_output(json_encode($data));
+		$this->output->set_output(json_encode($data));
 
 	}
 
@@ -311,12 +311,6 @@ class Travel extends CI_Controller {
  				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
  				$data = json_decode($url);
  				// var_dump($data);
- 				// $data->Img01 = $data->result->records[$i]->Picture1;
- 				// $data->Name01 = $data->result->records[$i]->Name;
- 				// $data->Title01 = $data->result->records[$i]->Picdescribe1;
- 				// $data->OpenTime01 = $data->result->records[$i]->Opentime;
- 				// $data->Tel01 = $data->result->records[$i]->Tel;
- 				// $data->FullAddress01 = $data->result->records[$i]->Add;
 
  				$view_data["Name"] = $data->result->records[$i]->Name;//名稱
  				$view_data["Introduction"] = $this->noempty("", $data->result->records[$i]->Description);//描述
@@ -339,7 +333,39 @@ class Travel extends CI_Controller {
  				$marker['position'] = $GPS;
  				$this->googlemaps->add_marker($marker);
  				$view_data['map'] = $this->googlemaps->create_map();
- 			}
+
+			}else if(isset($place) && !empty($place) && $place == "tainan"){
+				$view_data["place"] = "台南";
+ 				$view_data["travel"] = "景點";
+				$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
+				$data = json_decode($url);
+				$arrayData = new stdClass();//陣列轉換class後存自此變數
+				foreach ($data as $key => $value) {
+					$arrayData->data[$key] = $value;
+				}
+
+ 				$view_data["Name"] = $arrayData->data[$i]->name;//名稱
+ 				$view_data["Introduction"] = $this->noempty("", $arrayData->data[$i]->introduction);//描述
+ 				$view_data["OpenTime"] = $this->noempty("開放時間：", $arrayData->data[$i]->opentime);//開放時間
+ 				$view_data["Tel"] = $this->noempty("電話：", $arrayData->data[$i]->tel);//電話
+ 				$view_data["FullAddress"] = $this->noempty("地址：", $arrayData->data[$i]->address);//地址
+ 				$PyPx = $arrayData->data[$i]->lat.",".$arrayData->data[$i]->long;//lat經度long緯度
+ 				$view_data["Driving"] = $this->noempty("如何到達：", "123");//如何到達
+ 				// $view_data["Title"] = $this->noempty("-", "");
+ 				$view_data["Images"] = " ";//照片
+ 				$view_data["Count"] = 1;
+		
+ 				$GPS = $this->noempty("", $PyPx);//GPS經緯度
+
+ 				$config['center'] = $GPS;
+ 				$config['zoom'] = '16';
+ 				$this->googlemaps->initialize($config);
+
+ 				$marker = array();
+ 				$marker['position'] = $GPS;
+ 				$this->googlemaps->add_marker($marker);
+ 				$view_data['map'] = $this->googlemaps->create_map();
+			}
 		}//attractions
 
 		if (isset($travel) && !empty($travel) && $travel == "food") {

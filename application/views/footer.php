@@ -157,12 +157,11 @@
 
         function tainan(datas, i){
           Img = "https://cdn.free.com.tw/blog/wp-content/uploads/2014/08/Placekitten480-g.jpg";//照片
-          var datass = "data"+i;
-          Name = datas'.'+i+'.'name;//地點名
+          Name = datas.data[i].name;//地點名
           Title = "";
-          OpenTime = datas.data.opentime;//開放時間
-          Tel = datas.data.tel;//電話
-          FullAddress = datas.data.address;//地址
+          OpenTime = datas.data[i].opentime;//開放時間
+          Tel = datas.data[i].tel;//電話
+          FullAddress = datas.data[i].address;//地址
         }
 
         function alltaiwan(datas, i){
