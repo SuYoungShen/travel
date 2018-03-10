@@ -107,7 +107,7 @@
               $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
               $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
               $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
-              $("figcaption").append("<a href='travel/details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
+              $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
 
               $("#title").text(datas.title);//抬頭
 
@@ -133,9 +133,9 @@
                  }
 
                 if ((i%2) == 0 || i == 1) {
-                  $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='travel/details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                  $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
                 }else {
-                  $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='travel/details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                  $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
                 }
               }
 
