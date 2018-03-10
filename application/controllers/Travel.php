@@ -38,7 +38,6 @@ class Travel extends CI_Controller {
 		// }else {
 			$this->load->view("layout", $view_data);
 		// }
-
 	}
 
 	function attractions_place(){
@@ -354,7 +353,7 @@ class Travel extends CI_Controller {
  				// $view_data["Title"] = $this->noempty("-", "");
  				$view_data["Images"] = " ";//照片
  				$view_data["Count"] = 1;
-		
+
  				$GPS = $this->noempty("", $PyPx);//GPS經緯度
 
  				$config['center'] = $GPS;
