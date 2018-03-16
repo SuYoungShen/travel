@@ -82,7 +82,7 @@
           });
         });
 
-        function viewAj(url, travel_val, place_val){//首頁的顯示
+        function viewAj(url, travel_val, place_val){//首頁的有圖片的顯示
           $.ajax({
             url: url,
             type: 'POST',
@@ -102,18 +102,30 @@
               }
 
               $(".figcaption").remove();
-              $('.main_Img').attr("src", datas.Img01);
-              $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
-              $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
-              $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
-              $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
-              $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
+              // 第一筆資料
+              if (typeof(datas.Img01) != "undefined") {
+
+                $('.main_Img').attr("src", datas.Img01);
+                $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
+                $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
+                $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
+                $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
+                $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
+                // 第一筆資料
+                
+              }else {
+
+                $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
+                $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
+                $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
+                $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
+                $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
+              }
 
               $("#title").text(datas.title);//抬頭
 
               for (var i = 1; i < datas.Total; i++) {
                 if (place_val == "kaohsiung") {
-                  // alert(place_val);
                   kaohsiung(datas, i);
                 }else if(place_val == "tainan"){
                   tainan(datas, i);
@@ -128,17 +140,12 @@
                    Tel = "電話："+Tel;
                  }
 
-                 if (Img == "") {
-                   Img = "https://www.90daykorean.com/wp-content/uploads/2016/02/bigstock-Emoticon-saying-no-with-his-fi-42171217.jpg";
-                 }
-
                 if ((i%2) == 0 || i == 1) {
                   $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
                 }else {
                   $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
                 }
               }
-
             },
             error: function(data){
               alert("失敗");
@@ -156,7 +163,6 @@
         }
 
         function tainan(datas, i){
-          Img = "https://cdn.free.com.tw/blog/wp-content/uploads/2014/08/Placekitten480-g.jpg";//照片
           Name = datas.data[i].name;//地點名
           Title = "";
           OpenTime = datas.data[i].opentime;//開放時間
