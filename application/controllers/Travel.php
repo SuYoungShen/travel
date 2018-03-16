@@ -192,13 +192,12 @@ class Travel extends CI_Controller {
 
 				$arrayData->title = "台南景點";
 				$arrayData->Name01 = $arrayData->data[0]->name;//第一筆資料的名稱
-				$arrayData->Img01 ="https://cdn.free.com.tw/blog/wp-content/uploads/2014/08/Placekitten480-g.jpg";
 				$arrayData->Title01 = "";
 				$arrayData->OpenTime01 = $arrayData->data[0]->opentime;
 				$arrayData->Tel01 = $arrayData->data[0]->tel;
 				$arrayData->FullAddress01 = $arrayData->data[0]->address;
 				$arrayData->Total = count($data);
-
+				$this->session->set_flashdata('test', '0');
 				$this->output->set_content_type('application/json')->set_output(json_encode($arrayData));
 
 			}else if(isset($travel) && !empty($travel) && $travel == "food"){
