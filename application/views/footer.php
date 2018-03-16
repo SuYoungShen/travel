@@ -104,6 +104,7 @@
               $(".figcaption").remove();
               // 第一筆資料
               if (typeof(datas.Img01) != "undefined") {
+                $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
 
                 $('.main_Img').attr("src", datas.Img01);
                 $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
@@ -112,14 +113,21 @@
                 $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
                 $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
                 // 第一筆資料
-                
+
               }else {
+                $('.one').append('<div class="panel panel-primary"><figcaption></figcaption></div></div>');
+                $('ul').remove('.main_left');
+                $('ul').remove('.main_right');
 
                 $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
                 $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
                 $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
                 $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
                 $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
+
+                // $('.two').append('<div class="panel panel-primary"><ul class="grid-lod effect-2 main_left" id="grid"></ul></div>');
+                // $('.three').append('<div class="panel panel-success"><ul class="grid-lod effect-2 main_right" id="grid"></ul></div>');
+
               }
 
               $("#title").text(datas.title);//抬頭
@@ -140,11 +148,19 @@
                    Tel = "電話："+Tel;
                  }
 
-                if ((i%2) == 0 || i == 1) {
-                  $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
-                }else {
-                  $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
-                }
+                 if (typeof(Img) != "undefined") {//表示景點無照片
+                   if ((i%2) == 0 || i == 1) {
+                     $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                   }else {
+                     $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                   }
+                 }else {
+                   if ((i%2) == 0 || i == 1) {
+                     $(".two").append("<div class='panel panel-primary'><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
+                   }else {
+                     $(".three").append("<div class='panel panel-success'><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
+                   }
+                 }
               }
             },
             error: function(data){
