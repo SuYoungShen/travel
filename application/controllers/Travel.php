@@ -197,7 +197,6 @@ class Travel extends CI_Controller {
 				$arrayData->Tel01 = $arrayData->data[0]->tel;
 				$arrayData->FullAddress01 = $arrayData->data[0]->address;
 				$arrayData->Total = count($data);
-				$this->session->set_flashdata('test', '0');
 				$this->output->set_content_type('application/json')->set_output(json_encode($arrayData));
 
 			}else if(isset($travel) && !empty($travel) && $travel == "food"){

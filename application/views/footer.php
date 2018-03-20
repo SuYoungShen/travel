@@ -104,8 +104,9 @@
               $(".figcaption").remove();
               // 第一筆資料
               if (typeof(datas.Img01) != "undefined") {
+                $('div').remove('.panel-primary');
+                $('div').remove('.panel-success');
                 $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
-
                 $('.main_Img').attr("src", datas.Img01);
                 $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
                 $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
@@ -115,9 +116,9 @@
                 // 第一筆資料
 
               }else {
-                $('.one').append('<div class="panel panel-primary"><figcaption></figcaption></div></div>');
                 $('ul').remove('.main_left');
                 $('ul').remove('.main_right');
+                $('.one').append('<div class="panel panel-primary"><figcaption></figcaption></div></div>');
 
                 $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
                 $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")

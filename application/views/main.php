@@ -15,42 +15,18 @@
       </article>
     </section>
 
-    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid">
-
-
-
-      <!-- <div class="panel panel-primary">
-        <div class="panel-body">
-          <figcaption>
-          Panel content
-        </figcaption>
-        </div>
-      </div> -->
-  
-    <figure class="effect-oscar">
-      <img src="assets/images/home-images/image-1.jpg" alt="" class="img-responsive main_Img"/>
-      <figcaption>
-        <h2>Eliana Dedda<span> Identity</span></h2>
-        <p>Personal Brand Identity.</p>
-        <a href="detals/0">View more</a>
-      </figcaption>
-    </figure>
-
-
-
+    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid one">
     </section>
 
     <div class="clearfix"></div>
     <div class="clearfix"></div>
 
-    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid">
-      <ul class="grid-lod effect-2 main_left" id="grid">
-      </ul>
+    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid two">
+      <ul class="grid-lod effect-2 main_left" id="grid"></ul>
     </section>
 
-    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid">
-      <ul class="grid-lod effect-2 main_right" id="grid">
-      </ul>
+    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid three">
+      <ul class="grid-lod effect-2 main_right" id="grid"></ul>
     </section>
     <div class="clearfix"></div>
   </div>
