@@ -213,7 +213,7 @@ class Travel extends CI_Controller {
 				// echo "</pre>";
 				$this->output->set_content_type('application/json')->set_output(json_encode($data));
 			}
-		}else if(word_censor($base, "http://104.199.199.61/tainan/attractions")){//word_censor用來檢查看看網址有無此文字
+		}else if($base == "http://104.199.199.61/tainan/attractions"){//word_censor用來檢查看看網址有無此文字
 
 			$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
 			$data = json_decode($url);
