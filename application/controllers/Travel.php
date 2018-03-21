@@ -125,7 +125,6 @@ class Travel extends CI_Controller {
 
 				$data->Img01 = $data->result->records[0]->Picture1;
 				$data->Name01 = $data->result->records[0]->Name;
-				$data->Title01 = $data->result->records[0]->Picdescribe1;
 				$data->OpenTime01 = $data->result->records[0]->Opentime;
 				$data->Tel01 = $data->result->records[0]->Tel;
 				$data->FullAddress01 = $data->result->records[0]->Add;
@@ -143,7 +142,6 @@ class Travel extends CI_Controller {
 
 				$data->Img01 = $data->result->records[0]->Picture1;
 				$data->Name01 = $data->result->records[0]->Name;
-				$data->Title01 = $data->result->records[0]->Picdescribe1;
 				$data->OpenTime01 = $data->result->records[0]->Opentime;
 				$data->Tel01 = $data->result->records[0]->Tel;
 				$data->FullAddress01 = $data->result->records[0]->Add;
@@ -170,6 +168,7 @@ class Travel extends CI_Controller {
 	}
 
 	function tainan(){//沒照片...
+
 		$base = base_url().uri_string();
 		if (isset($_POST["place"]) && !empty($_POST["place"]) && $_POST["place"] == "tainan") {
 
@@ -192,7 +191,6 @@ class Travel extends CI_Controller {
 
 				$arrayData->title = "台南景點";
 				$arrayData->Name01 = $arrayData->data[0]->name;//第一筆資料的名稱
-				$arrayData->Title01 = "";
 				$arrayData->OpenTime01 = $arrayData->data[0]->opentime;
 				$arrayData->Tel01 = $arrayData->data[0]->tel;
 				$arrayData->FullAddress01 = $arrayData->data[0]->address;
@@ -207,7 +205,6 @@ class Travel extends CI_Controller {
 
 				$data->Img01 = $data->result->records[0]->Picture1;
 				$data->Name01 = $data->result->records[0]->Name;
-				$data->Title01 = $data->result->records[0]->Picdescribe1;
 				$data->OpenTime01 = $data->result->records[0]->Opentime;
 				$data->Tel01 = $data->result->records[0]->Tel;
 				$data->FullAddress01 = $data->result->records[0]->Add;
@@ -216,16 +213,16 @@ class Travel extends CI_Controller {
 				// echo "</pre>";
 				$this->output->set_content_type('application/json')->set_output(json_encode($data));
 			}
-		}else if(word_censor($base, "http://104.199.199.61/travel/details/attractions/tainan/")){//word_censor用來檢查看看網址有無此文字
+		}else if(word_censor($base, "http://104.199.199.61/tainan/attractions")){//word_censor用來檢查看看網址有無此文字
 
 			$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
 			$data = json_decode($url);
-			$arrayData = new stdClass();//陣列轉換class後存自此變數
-			foreach ($data as $key => $value) {
-				$arrayData->data[$key] = $value;
-			}
+			// $arrayData = new stdClass();//陣列轉換class後存自此變數
+			// foreach ($data as $key => $value) {
+			// 	$arrayData->data[$key] = $value;
+			// }
 			// var_dump($arrayData);
-			$this->output->set_content_type('application/json')->set_output(json_encode($arrayData));
+			$this->output->set_content_type('application/json')->set_output(json_encode($data));
 
 		}else if($base == "http://104.199.199.61/tainan/food"){
 
