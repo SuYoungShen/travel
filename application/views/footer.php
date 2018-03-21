@@ -54,35 +54,69 @@
           var place_val = $(place).find(":selected").val();
           var count = 0;//計數
 
-          aj(count, travel_val, place);
+          Dropdown_Ajax(count, travel_val, place);
 
           $(travel).on('change', function(event) {
-
             var travel_val = $(travel).find(":selected").val();
-            aj(count, travel_val, place);
+            Dropdown_Ajax(count, travel_val, place);
           });
 
           $(".btn").click(function(event) {
+            //計算按幾次按鈕，為了要恢復下面被移除的ul
+            var count=document.getElementById("count").value;
+            count++;
+            document.getElementById("count").value = count;
+            //計算按幾次按鈕，為了要恢復下面被移除的ul
+
             var travel_val = $(travel).find(":selected").val();
             var place_val = $(place).find(":selected").val();
 
             if (place_val == "pingtung") {//判斷是否為屏東
               url = "pingtung";
-              viewAj(url, travel_val, place_val);
+              viewAj(url, travel_val, place_val, count);
             }else if(place_val == "kaohsiung"){
               url = "kaohsiung";
-              viewAj(url, travel_val, place_val);
+              viewAj(url, travel_val, place_val, count);
             }else if (place_val == "tainan") {
               url = "tainan";
-              viewAj(url, travel_val, place_val);
+              viewAj(url, travel_val, place_val, count);
             }else if(place_val == "alltaiwan"){
               url = "alltaiwan";
-              viewAj(url, travel_val, place_val);
+              viewAj(url, travel_val, place_val, count);
             }
           });
         });
 
-        function viewAj(url, travel_val, place_val){//首頁的有圖片的顯示
+        function Dropdown_Ajax(count, travel_val, place){//下拉
+          var url = "";
+          if (travel_val == "attractions") {
+            url = "attractions_place";
+          }else if (travel_val == "food") {
+            url = "food_place";
+          }
+          $.ajax({
+              url: url,
+              type: 'POST',
+              data: {data: travel_val},
+              dataType: "json",
+              success: function(datas){
+                $(place).selectpicker('show');
+                $(place).selectpicker('setStyle', 'btn-success');
+
+                if (count >= 1) {
+                  $(place).empty();
+                  $(place).selectpicker('refresh');
+                }
+                $.each(datas, function(key, value) {
+                  $(place).append("<option value='"+key+"'>"+value+"</option>");
+                });
+                $(place).selectpicker('refresh');
+              }
+            });
+            ++count;
+        }
+
+        function viewAj(url, travel_val, place_val, count){//顯示內容
           $.ajax({
             url: url,
             type: 'POST',
@@ -92,23 +126,17 @@
             },
             dataType: "json",
             success: function(datas){
-              $(".main_left li").remove();
-              $(".main_right li").remove();
 
-              if (datas.Title01 == null) {
-                datas.Title01 == "";
-              }else if (datas.Title01 != "") {
-                datas.Title01 = "-"+datas.Title01;
-              }
-
-              $(".figcaption").remove();
               // 第一筆資料
-              if (typeof(datas.Img01) != "undefined") {
-                $('div').remove('.panel-primary');
-                $('div').remove('.panel-success');
+              if (typeof(datas.Img01) === typeof("string")) {//資料有照片會跑這段
+                $(".panel").remove();//移除無照片的眶
+                if (count >= 1) {
+                  $('.two').append('<ul class="grid-lod effect-2 main_left" id="grid"></ul>');
+                  $('.three').append('<ul class="grid-lod effect-2 main_right" id="grid"></ul>');
+                }
                 $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
                 $('.main_Img').attr("src", datas.Img01);
-                $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
+                $('figcaption').html("<h2>"+datas.Name01+"</h2>");
                 $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
                 $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
                 $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
@@ -116,19 +144,18 @@
                 // 第一筆資料
 
               }else {
-                $('ul').remove('.main_left');
-                $('ul').remove('.main_right');
-                $('.one').append('<div class="panel panel-primary"><figcaption></figcaption></div></div>');
+                //因為無照片所以要移除有照片的tag
+                $(".one figure").remove();
+                $(".two ul").remove();
+                $(".three ul").remove();
+                //因為無照片所以要移除有照片的tag
 
-                $('figcaption').html("<h2>"+datas.Name01+/*"<span>"+datas.Title01+"</span>*/"</h2>");
+                $('.one').append('<div class="panel panel-primary"><figcaption></figcaption></div></div>');
+                $('figcaption').html("<h2>"+datas.Name01+"</h2>");
                 $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
                 $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
                 $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
                 $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
-
-                // $('.two').append('<div class="panel panel-primary"><ul class="grid-lod effect-2 main_left" id="grid"></ul></div>');
-                // $('.three').append('<div class="panel panel-success"><ul class="grid-lod effect-2 main_right" id="grid"></ul></div>');
-
               }
 
               $("#title").text(datas.title);//抬頭
@@ -139,27 +166,25 @@
                 }else if(place_val == "tainan"){
                   tainan(datas, i);
                 }
-                if (Title == null) {
-                   Title = "";
-                 }else if(Title != ""){
-                   Title = "-"+Title;
-                 }
 
                  if (Tel != "") {
                    Tel = "電話："+Tel;
                  }
 
-                 if (typeof(Img) != "undefined") {//表示景點無照片
+                 if (typeof(Img) === typeof("string")) {//如果有照片為字串
+
                    if ((i%2) == 0 || i == 1) {
-                     $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                     $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
                    }else {
-                     $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                     $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
                    }
-                 }else {
+
+                 }else if(Img === false){//如果沒照片為false
+
                    if ((i%2) == 0 || i == 1) {
-                     $(".two").append("<div class='panel panel-primary'><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
+                     $(".two").append("<div class='panel panel-primary'><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
                    }else {
-                     $(".three").append("<div class='panel panel-success'><figcaption><h2>"+Name+"<!--<span>"+Title+"</span>--></h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
+                     $(".three").append("<div class='panel panel-success'><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
                    }
                  }
               }
@@ -173,15 +198,14 @@
         function kaohsiung(datas, i){
           Img = datas.result.records[i].Picture1;//照片
           Name = datas.result.records[i].Name;//地點名
-          Title = datas.result.records[i].Picdescribe1;
           OpenTime = datas.result.records[i].Opentime;//開放時間
           Tel = datas.result.records[i].Tel;//電話
           FullAddress = datas.result.records[i].Add;//地址
         }
 
         function tainan(datas, i){
+          Img = false;//無照片
           Name = datas.data[i].name;//地點名
-          Title = "";
           OpenTime = datas.data[i].opentime;//開放時間
           Tel = datas.data[i].tel;//電話
           FullAddress = datas.data[i].address;//地址
@@ -190,7 +214,6 @@
         function alltaiwan(datas, i){
           Img = datas.XML_Head.Infos.Info[i].Picture1;//照片
           Name = datas.XML_Head.Infos.Info[i].Name;//地點名
-          Title = "";
           OpenTime = datas.XML_Head.Infos.Info[i].OpenTime;//開放時間
           Tel = datas.XML_Head.Infos.Info[i].Tel;//電話
           FullAddress = datas.XML_Head.Infos.Info[i].Add;//地址
@@ -229,34 +252,6 @@
           // }
         }
 
-        function aj(count, travel_val, place){//下拉
-          var url = "";
-          if (travel_val == "attractions") {
-            url = "attractions_place";
-          }else if (travel_val == "food") {
-            url = "food_place";
-          }
-          $.ajax({
-              url: url,
-              type: 'POST',
-              data: {data: travel_val},
-              dataType: "json",
-              success: function(datas){
-                $(place).selectpicker('show');
-                $(place).selectpicker('setStyle', 'btn-success');
-
-                if (count >= 1) {
-                  $(place).empty();
-                  $(place).selectpicker('refresh');
-                }
-                $.each(datas, function(key, value) {
-                  $(place).append("<option value='"+key+"'>"+value+"</option>");
-                });
-                $(place).selectpicker('refresh');
-              }
-            });
-            ++count;
-        }
       </script>
   </body>
 </html>
