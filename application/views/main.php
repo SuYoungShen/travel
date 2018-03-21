@@ -1,13 +1,14 @@
 <!-- main -->
 <main role="main-home-wrapper" class="container">
   <div class="row">
-    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+    <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
       <article role="pge-title-content">
         <header>
           <form class="form-inline" method="post">
             <h2><span id="title"><?=$title; ?></span><?=$sub_title;?></h2>
             <?php echo $TravelDropdown; ?>
             <select class="selectpicker" id="place" name="place" data-width="auto" data-style="btn-primary"></select>
+            <input type="hidden" id="count" value="0">
             <button type="button" name="button" class="btn btn-danger">送出</button>
           </form>
         </header>
