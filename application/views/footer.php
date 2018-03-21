@@ -148,7 +148,7 @@
                 $(".one figure").remove();
                 $(".two ul").remove();
                 $(".three ul").remove();
-                //因為無照片所以要移除有照片的ta
+                //因為無照片所以要移除有照片的tag
 
                 $('.one').append('<div class="panel panel-primary"><figcaption></figcaption></div></div>');
                 $('figcaption').html("<h2>"+datas.Name01+"</h2>");
