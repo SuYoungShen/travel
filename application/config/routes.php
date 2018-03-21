@@ -52,9 +52,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['attractions_place'] = 'travel/attractions_place';
 $route['pingtung'] = 'travel/pingtung/';
 $route['kaohsiung'] = 'travel/kaohsiung/';
-$route['kaohsiung/(:any)'] = 'travel/kaohsiung/$1';
 $route['tainan'] = 'travel/tainan/';
-$route['tainan/(:any)'] = 'travel/tainan/$1';
+$route['tainan/(:any)'] = function($place){
+  if ($place == "attractions") {
+    return "travel/tainan/".$place;
+  }else if($place == "food"){
+    return "travel/tainan/".$place;
+  }
+};
 $route["alltaiwan"] = 'travel/alltaiwan';
 
 
