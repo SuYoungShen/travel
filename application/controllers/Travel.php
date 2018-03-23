@@ -6,7 +6,6 @@ class Travel extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('form'));
 		$this->load->model('travel_model');
 	}
 
@@ -134,7 +133,12 @@ class Travel extends CI_Controller {
 					$data->Tel01 = $data->result->records[0]->Tel;
 					$data->FullAddress01 = $data->result->records[0]->Add;
 					$data->Total = count($data->result->records);
+
+					//20180324
+					date_default_timezone_set("Asia/Taipei");//設定時區
+
 					//20180323
+
 					$Today_Date = date('Y-m-d');//今天日期
 
 					if($this->travel_model->get_num($place) === 0){//判斷資料庫有無資料
@@ -186,6 +190,7 @@ class Travel extends CI_Controller {
 
 							foreach ($data->result->records as $key => $value) {
 								$datas = array(
+									'Name' => $value->Name,
 									'Picture' => $value->Picture1,
 									'Description'=> $value->Description,
 									'Opentime' => $value->Opentime,
@@ -293,8 +298,7 @@ class Travel extends CI_Controller {
 
 		}else if($base == "http://104.199.199.61/kaohsiung/test"){
 
-			
-			}
+
 		}
 	}
 
