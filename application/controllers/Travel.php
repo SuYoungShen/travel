@@ -138,7 +138,6 @@ class Travel extends CI_Controller {
 					date_default_timezone_set("Asia/Taipei");//設定時區
 
 					//20180323
-
 					$Today_Date = date('Y-m-d');//今天日期
 
 					if($this->travel_model->get_num($place) === 0){//判斷資料庫有無資料
