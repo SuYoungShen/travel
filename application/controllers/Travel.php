@@ -121,50 +121,28 @@ class Travel extends CI_Controller {
 		if (isset($place) && !empty($place) && $place == "kaohsiung") {
 
 			if (isset($travel) && !empty($travel) && $travel == "attractions") {
-				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
-				$data = json_decode($url);
 
-				$data->title = "高雄景點";
+				$url = @file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
 
-				$data->Img01 = $data->result->records[0]->Picture1;
-				$data->Name01 = $data->result->records[0]->Name;
-				$data->OpenTime01 = $data->result->records[0]->Opentime;
-				$data->Tel01 = $data->result->records[0]->Tel;
-				$data->FullAddress01 = $data->result->records[0]->Add;
-				$data->Total = count($data->result->records);
+				if ($url) {//判斷是否抓取成功
+					$data = json_decode($url);
+					$data->title = "高雄景點";
 
-				//20180323
-				$Today_Date = date('Y-m-d');//今天日期				
+					$data->Img01 = $data->result->records[0]->Picture1;
+					$data->Name01 = $data->result->records[0]->Name;
+					$data->OpenTime01 = $data->result->records[0]->Opentime;
+					$data->Tel01 = $data->result->records[0]->Tel;
+					$data->FullAddress01 = $data->result->records[0]->Add;
+					$data->Total = count($data->result->records);
 
-				if($this->travel_model->get_num($place) === 0){//判斷資料庫有無資料
+					//20180323
+					$Today_Date = date('Y-m-d');//今天日期
 
-					foreach ($data->result->records as $key => $value) {
-						$datas = array(
-							'id' => $value->_id,
-							'Picture' => $value->Picture1,
-							'name' => $value->Name,
-							'Opentime' => $value->Opentime,
-							'Tel' => $value->Tel,
-							'Add' => $value->Add,
-							'Update_Date' => $Today_Date
-						);
-						$true = $this->travel_model->insert($place, $datas);
-					}
-					if($true){
-						$this->output->set_content_type('application/json')->set_output(json_encode($data));
-					}else {
-						echo "新增資料庫失敗";
-					}
-
-				}else {
-
-					$Update_Date = $this->travel_model->get_date($place);//更新日期
-
-					//判斷今天日期有無大於table日期，有表示要做更新
-					if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+					if($this->travel_model->get_num($place) === 0){//判斷資料庫有無資料
 
 						foreach ($data->result->records as $key => $value) {
 							$datas = array(
+								'id' => $value->_id,
 								'Picture' => $value->Picture1,
 								'name' => $value->Name,
 								'Opentime' => $value->Opentime,
@@ -172,20 +150,70 @@ class Travel extends CI_Controller {
 								'Add' => $value->Add,
 								'Update_Date' => $Today_Date
 							);
-							$where = "id =". $value->_id;
-
-							$true = $this->travel_model->update($place, $datas, $where);
+							$true = $this->travel_model->insert($place, $datas);
 						}
 						if($true){
 							$this->output->set_content_type('application/json')->set_output(json_encode($data));
 						}else {
-							echo "更新失敗";
+							echo "新增資料庫失敗";
 						}
+
 					}else {
-						$this->output->set_content_type('application/json')->set_output(json_encode($data));
+
+						$Update_Date = $this->travel_model->get_date($place);//更新日期
+
+						//判斷今天日期有無大於table日期，有表示要做更新
+						if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+
+							foreach ($data->result->records as $key => $value) {
+								$datas = array(
+									'Picture' => $value->Picture1,
+									'name' => $value->Name,
+									'Opentime' => $value->Opentime,
+									'Tel' => $value->Tel,
+									'Add' => $value->Add,
+									'Update_Date' => $Today_Date
+								);
+								$where = "id =". $value->_id;
+
+								$true = $this->travel_model->update($place, $datas, $where);
+							}
+							if($true){
+								$this->output->set_content_type('application/json')->set_output(json_encode($data));
+							}else {
+								echo "更新失敗";
+							}
+						}else {
+							$this->output->set_content_type('application/json')->set_output(json_encode($data));
+						}
+						//20180323
 					}
-					//20180323
+				}else{//END $url
+					//當api掛掉時，抓取資料庫資料
+					$true = $this->travel_model->get_all($place);
+
+					@$data = new stdClass();//陣列轉換class後存自此變數;@禁止顯示錯誤
+					$data->Total = $this->travel_model->get_num($place);
+					$data->title = "高雄景點";
+
+					foreach ($true as $key => $value) {
+						if ($key === 0) {
+							$data->Img01 = $value['Picture'];
+							$data->Name01 = $value['Name'];
+							$data->OpenTime01 = $value['Opentime'];
+							$data->Tel01 = $value['Tel'];
+							$data->FullAddress01 = $value['Add'];
+						}else {
+							@$data->result->records[$key]->Picture1 = $value['Picture'];
+							@$data->result->records[$key]->Name = $value['Name'];
+							@$data->result->records[$key]->Opentime = $value['Opentime'];
+							@$data->result->records[$key]->Tel = $value['Tel'];
+							@$data->result->records[$key]->Add = $value['Add'];
+						}
+					}
+					$this->output->set_content_type('application/json')->set_output(json_encode($data));
 				}
+
 				// echo "<pre>";
 				// var_dump($data);
 				// echo "</pre>";
@@ -223,6 +251,36 @@ class Travel extends CI_Controller {
 			$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
 			$data = json_decode($url);
 			$this->output->set_content_type('application/json')->set_output(json_encode($data));
+
+		}else if($base == "http://104.199.199.61/kaohsiung/test"){
+
+			// $url = @file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc96");
+			// if ($url) {//判斷是否抓取成功
+			// 	echo $url;
+			// }else {
+			// 	$true = $this->travel_model->get_all($place);
+			//
+			// 	@$data = new stdClass();//陣列轉換class後存自此變數;@禁止顯示錯誤
+			// 	$data->Total = $this->travel_model->get_num($place);
+			// 	$data->title = "高雄景點";
+			//
+			// 	foreach ($true as $key => $value) {
+			// 		if ($key === 0) {
+			// 			$data->Img01 = $value['Picture'];
+			// 			$data->Name01 = $value['Name'];
+			// 			$data->OpenTime01 = $value['Opentime'];
+			// 			$data->Tel01 = $value['Tel'];
+			// 			$data->FullAddress01 = $value['Add'];
+			// 		}else {
+			// 			@$data->result->records[$key]->Picture1 = $value['Picture'];
+			// 			@$data->result->records[$key]->Name = $value['Name'];
+			// 			@$data->result->records[$key]->Opentime = $value['Opentime'];
+			// 			@$data->result->records[$key]->Tel = $value['Tel'];
+			// 			@$data->result->records[$key]->Add = $value['Add'];
+			// 		}
+			// 	}
+			// 	$this->output->set_content_type('application/json')->set_output(json_encode($data));
+			// }
 
 		}
 	}
