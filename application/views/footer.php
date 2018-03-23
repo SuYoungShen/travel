@@ -128,8 +128,8 @@
 
               // 第一筆資料
               if (typeof(datas.Img01) === typeof("string")) {//資料有照片會跑這段
-
-                $(".comments-pan").remove();//移除無照片的眶
+                //移除無照片的眶
+                $(".comments-pan").remove();
                 if (count >= 1) {
                   $('figure').remove();
                   $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
@@ -142,7 +142,7 @@
                 $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
                 $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
                 $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
-                $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
+                $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/"+datas.Id01+"' target='_blank'>詳細內容</a>");
                 // 第一筆資料
 
               }else {
@@ -160,7 +160,7 @@
                 $(".comments-reply li section").append("<p>時間："+datas.OpenTime01+"</p>")
                 $(".comments-reply li section").append("<p>電話："+datas.Tel01+"</p>")
                 $(".comments-reply li section").append("<p>地址："+datas.FullAddress01+"</p>")
-                $(".comments-reply li section").append("<button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a></button>");
+                $(".comments-reply li section").append("<button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></button>");
               }
 
               $("#title").text(datas.title);//抬頭
@@ -179,9 +179,9 @@
                  if (typeof(Img) === typeof("string")) {//如果有照片為字串
 
                    if ((i%2) == 0 || i == 1) {
-                     $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
+                     $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
                    }else {
-                     $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
+                     $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
                    }
 
                  }else if(Img === false){//如果沒照片為false
@@ -195,12 +195,15 @@
               }
             },
             error: function(data){
-              alert(eval(data));
+              <?php if ($sys_code === 404) { ?>
+                alert(<?=$sys_msg;?>);
+              <?php } ?>
             }
           });
         }
 
         function kaohsiung(datas, i){
+          Id = datas.Id[i];//id
           Img = datas.result.records[i].Picture1;//照片
           Name = datas.result.records[i].Name;//地點名
           OpenTime = datas.result.records[i].Opentime;//開放時間
