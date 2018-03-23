@@ -12,17 +12,23 @@ class Travel_model extends CI_Model {
     return $table;
   }
 
-  //資料庫新增
+  //抓取全部資料
+  public function get_all($table){
+    return $this->db->get($table)->result_array();
+  }
+
+  //資料表新增
   public function insert($table, $datas){
     return $this->db->insert($table, $datas);
   }
 
-  //更新資料庫
+  //更新資料表
   public function update($table, $datas, $where){
     $this->db->where($where);
     return  $this->db->update($table, $datas);
   }
 
+  //抓取日期
   public function get_date($table){
     return $this->db->select('Update_Date')->get($table)->row();
   }
