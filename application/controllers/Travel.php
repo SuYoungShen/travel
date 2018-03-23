@@ -7,6 +7,7 @@ class Travel extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->helper(array('form'));
+		$this->load->model('travel_model');
 	}
 
 	function index()
@@ -111,11 +112,13 @@ class Travel extends CI_Controller {
 	}
 
 	function kaohsiung(){
- 		$base = base_url().uri_string();
-		if (isset($_POST["place"]) && !empty($_POST["place"]) && $_POST["place"] == "kaohsiung") {
 
-			$place = $_POST["place"];
-			$travel = $_POST["travel"];
+ 		$base = base_url().uri_string();
+
+		$place = $this->input->post('place');
+		$travel = $this->input->post('travel');
+
+		if (isset($place) && !empty($place) && $place == "kaohsiung") {
 
 			if (isset($travel) && !empty($travel) && $travel == "attractions") {
 				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
@@ -129,10 +132,64 @@ class Travel extends CI_Controller {
 				$data->Tel01 = $data->result->records[0]->Tel;
 				$data->FullAddress01 = $data->result->records[0]->Add;
 				$data->Total = count($data->result->records);
+
+				//20180323
+				$Today_Date = date('Y-m-d');//今天日期				
+
+				if($this->travel_model->get_num($place) === 0){//判斷資料庫有無資料
+
+					foreach ($data->result->records as $key => $value) {
+						$datas = array(
+							'id' => $value->_id,
+							'Picture' => $value->Picture1,
+							'name' => $value->Name,
+							'Opentime' => $value->Opentime,
+							'Tel' => $value->Tel,
+							'Add' => $value->Add,
+							'Update_Date' => $Today_Date
+						);
+						$true = $this->travel_model->insert($place, $datas);
+					}
+					if($true){
+						$this->output->set_content_type('application/json')->set_output(json_encode($data));
+					}else {
+						echo "新增資料庫失敗";
+					}
+
+				}else {
+
+					$Update_Date = $this->travel_model->get_date($place);//更新日期
+
+					//判斷今天日期有無大於table日期，有表示要做更新
+					if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+
+						foreach ($data->result->records as $key => $value) {
+							$datas = array(
+								'Picture' => $value->Picture1,
+								'name' => $value->Name,
+								'Opentime' => $value->Opentime,
+								'Tel' => $value->Tel,
+								'Add' => $value->Add,
+								'Update_Date' => $Today_Date
+							);
+							$where = "id =". $value->_id;
+
+							$true = $this->travel_model->update($place, $datas, $where);
+						}
+						if($true){
+							$this->output->set_content_type('application/json')->set_output(json_encode($data));
+						}else {
+							echo "更新失敗";
+						}
+					}else {
+						$this->output->set_content_type('application/json')->set_output(json_encode($data));
+					}
+					//20180323
+				}
 				// echo "<pre>";
 				// var_dump($data);
 				// echo "</pre>";
-				$this->output->set_content_type('application/json')->set_output(json_encode($data));
+
 
 			}else if(isset($travel) && !empty($travel) && $travel == "food"){
 				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
@@ -145,7 +202,7 @@ class Travel extends CI_Controller {
 				$data->OpenTime01 = $data->result->records[0]->Opentime;
 				$data->Tel01 = $data->result->records[0]->Tel;
 				$data->FullAddress01 = $data->result->records[0]->Add;
-				$data->Total = count($data->result->records);
+				$data->Total = count($data->result->records);//總比數
 
 				// echo "<pre>";
 				// var_dump($data);
@@ -156,6 +213,9 @@ class Travel extends CI_Controller {
 
 			$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
 			$data = json_decode($url);
+
+			$Total = count($data->result->records);//總比數
+
 			$this->output->set_content_type('application/json')->set_output(json_encode($data));
 
 		}else if($base == "http://104.199.199.61/kaohsiung/food"){
@@ -179,8 +239,8 @@ class Travel extends CI_Controller {
 
 				$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
 				$data = json_decode($url);
-				$arrayData = new stdClass();//陣列轉換class後存自此變數
 
+				$arrayData = new stdClass();//陣列轉換class後存自此變數
 				foreach ($data as $key => $value) {
 					$arrayData->data[$key] = $value;
 				}
@@ -217,11 +277,13 @@ class Travel extends CI_Controller {
 
 			$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
 			$data = json_decode($url);
-			// $arrayData = new stdClass();//陣列轉換class後存自此變數
-			// foreach ($data as $key => $value) {
-			// 	$arrayData->data[$key] = $value;
-			// }
+			$arrayData = new stdClass();//陣列轉換class後存自此變數
+			foreach ($data as $key => $value) {
+				$arrayData->data[$key] = $value;
+			}
+			// echo "<pre>";
 			// var_dump($arrayData);
+			// echo "</pre>";
 			$this->output->set_content_type('application/json')->set_output(json_encode($data));
 
 		}else if($base == "http://104.199.199.61/tainan/food"){
