@@ -27,7 +27,6 @@
 </footer>
 <!-- footer -->
 
-
       <!-- custom -->
       <script src="assets/js/nav.js" type="text/javascript"></script>
       <script src="assets/js/custom.js" type="text/javascript"></script>
@@ -129,12 +128,15 @@
 
               // 第一筆資料
               if (typeof(datas.Img01) === typeof("string")) {//資料有照片會跑這段
-                $(".panel").remove();//移除無照片的眶
+
+                $(".comments-pan").remove();//移除無照片的眶
                 if (count >= 1) {
+                  $('figure').remove();
+                  $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
                   $('.two').append('<ul class="grid-lod effect-2 main_left" id="grid"></ul>');
                   $('.three').append('<ul class="grid-lod effect-2 main_right" id="grid"></ul>');
                 }
-                $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
+
                 $('.main_Img').attr("src", datas.Img01);
                 $('figcaption').html("<h2>"+datas.Name01+"</h2>");
                 $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
@@ -150,12 +152,15 @@
                 $(".three ul").remove();
                 //因為無照片所以要移除有照片的tag
 
-                $('.one').append('<div class="panel panel-primary"><figcaption></figcaption></div></div>');
-                $('figcaption').html("<h2>"+datas.Name01+"</h2>");
-                $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
-                $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
-                $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
-                $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a>");
+                $('.one').append('<div class="comments-pan"><ul class="comments-reply"><li><section></section></li></ul></div>');
+                $('.two').append('<div class="comments-pan"><ul class="comments-reply"></ul></div>');
+                $('.three').append('<div class="comments-pan"><ul class="comments-reply"></ul></div>');
+
+                $('.comments-reply li section').html("<h2>"+datas.Name01+"</h2>");
+                $(".comments-reply li section").append("<p>時間："+datas.OpenTime01+"</p>")
+                $(".comments-reply li section").append("<p>電話："+datas.Tel01+"</p>")
+                $(".comments-reply li section").append("<p>地址："+datas.FullAddress01+"</p>")
+                $(".comments-reply li section").append("<button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/0' target='_blank'>詳細內容</a></button>");
               }
 
               $("#title").text(datas.title);//抬頭
@@ -174,23 +179,23 @@
                  if (typeof(Img) === typeof("string")) {//如果有照片為字串
 
                    if ((i%2) == 0 || i == 1) {
-                     $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                     $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
                    }else {
-                     $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></figcaption></figure></li>");
+                     $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
                    }
 
                  }else if(Img === false){//如果沒照片為false
 
                    if ((i%2) == 0 || i == 1) {
-                     $(".two").append("<div class='panel panel-primary'><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
+                     $(".two .comments-pan .comments-reply").append("<li><section><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></button></section></li>");
                    }else {
-                     $(".three").append("<div class='panel panel-success'><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>View more</a></div>");
+                     $(".three .comments-pan .comments-reply").append("<li><section><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></button></section></li>");
                    }
                  }
               }
             },
             error: function(data){
-              alert("失敗");
+              alert(eval(data));
             }
           });
         }

@@ -20,7 +20,6 @@
     </section>
 
     <div class="clearfix"></div>
-    <div class="clearfix"></div>
 
     <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid two">
       <ul class="grid-lod effect-2 main_left" id="grid"></ul>
