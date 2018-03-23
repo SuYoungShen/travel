@@ -37,7 +37,8 @@ class Travel extends CI_Controller {
 		// 		$this->load->view("layout", $view_data);
 		// 	}
 		// }else {
-			$this->load->view("layout", $view_data);
+		$view_data['sys_code'] = 200;
+		$this->load->view("layout", $view_data);
 		// }
 	}
 
@@ -127,14 +128,12 @@ class Travel extends CI_Controller {
 				if ($url) {//判斷是否抓取成功
 					$data = json_decode($url);
 					$data->title = "高雄景點";
-
 					$data->Img01 = $data->result->records[0]->Picture1;
 					$data->Name01 = $data->result->records[0]->Name;
 					$data->OpenTime01 = $data->result->records[0]->Opentime;
 					$data->Tel01 = $data->result->records[0]->Tel;
 					$data->FullAddress01 = $data->result->records[0]->Add;
 					$data->Total = count($data->result->records);
-
 					//20180323
 					$Today_Date = date('Y-m-d');//今天日期
 
@@ -142,48 +141,91 @@ class Travel extends CI_Controller {
 
 						foreach ($data->result->records as $key => $value) {
 							$datas = array(
-								'id' => $value->_id,
+								'id' => uniqid(),
 								'Picture' => $value->Picture1,
 								'name' => $value->Name,
+								'Description'=> $value->Description,
 								'Opentime' => $value->Opentime,
 								'Tel' => $value->Tel,
 								'Add' => $value->Add,
+								'Driving' => $value->Travellinginfo,
+								'Py' => $value->Py,
+								'Px' => $value->Px,
 								'Update_Date' => $Today_Date
 							);
 							$true = $this->travel_model->insert($place, $datas);
 						}
 						if($true){
-							$this->output->set_content_type('application/json')->set_output(json_encode($data));
+
+							$datas = $this->travel_model->get_all($place);
+
+							foreach ($datas as $key => $value) {
+								if ($key === 0) {
+									$data->Id01 = $value['id'];
+								}else {
+									$data->Id[$key] = $value['id'];
+								}
+							}
+
+						$this->output->set_content_type('application/json')->set_output(json_encode($data));
+
 						}else {
-							echo "新增資料庫失敗";
+							$res['sys_code'] = 404;
+							$res['sys_msg'] = "新增資料庫失敗";
+							$this->output->set_content_type('application/json')->set_output(json_encode($res));
 						}
 
-					}else {
+					}else {//資料表有資料
 
-						$Update_Date = $this->travel_model->get_date($place);//更新日期
+						$Update_Date = $this->travel_model->get_date($place);
 
 						//判斷今天日期有無大於table日期，有表示要做更新
 						if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
 
+							$id = $this->travel_model->get_id($place);
+
 							foreach ($data->result->records as $key => $value) {
 								$datas = array(
 									'Picture' => $value->Picture1,
-									'name' => $value->Name,
+									'Description'=> $value->Description,
 									'Opentime' => $value->Opentime,
 									'Tel' => $value->Tel,
 									'Add' => $value->Add,
+									'Driving' => $value->Travellinginfo,
+									'Py' => $value->Py,
+									'Px' => $value->Px,
 									'Update_Date' => $Today_Date
 								);
-								$where = "id =". $value->_id;
+								$where = "id ="."'".$id[$key]['id']."'";
 
 								$true = $this->travel_model->update($place, $datas, $where);
 							}
 							if($true){
+
 								$this->output->set_content_type('application/json')->set_output(json_encode($data));
 							}else {
-								echo "更新失敗";
+								$res['sys_code'] = 404;
+								$res['sys_msg'] = "更新資料庫失敗";
+								$this->output->set_content_type('application/json')->set_output(json_encode($res));
 							}
-						}else {
+						}else {//END 比對時間
+
+							$data->title = "高雄景點";
+							$datas = $this->travel_model->get_all($place);
+
+							foreach ($datas as $key => $value) {
+								if ($key === 0) {
+									$data->Id01 = $value['id'];
+								}else {
+									$data->Id[$key] = $value['id'];
+								}
+							}
+							$data->Img01 = $data->result->records[0]->Picture1;
+							$data->Name01 = $data->result->records[0]->Name;
+							$data->OpenTime01 = $data->result->records[0]->Opentime;
+							$data->Tel01 = $data->result->records[0]->Tel;
+							$data->FullAddress01 = $data->result->records[0]->Add;
+							$data->Total = count($data->result->records);
 							$this->output->set_content_type('application/json')->set_output(json_encode($data));
 						}
 						//20180323
@@ -198,12 +240,14 @@ class Travel extends CI_Controller {
 
 					foreach ($true as $key => $value) {
 						if ($key === 0) {
+							$data->Id = $value['id'];
 							$data->Img01 = $value['Picture'];
 							$data->Name01 = $value['Name'];
 							$data->OpenTime01 = $value['Opentime'];
 							$data->Tel01 = $value['Tel'];
 							$data->FullAddress01 = $value['Add'];
 						}else {
+							@$data->result->records[$key]->id = $value['id'];
 							@$data->result->records[$key]->Picture1 = $value['Picture'];
 							@$data->result->records[$key]->Name = $value['Name'];
 							@$data->result->records[$key]->Opentime = $value['Opentime'];
@@ -213,11 +257,6 @@ class Travel extends CI_Controller {
 					}
 					$this->output->set_content_type('application/json')->set_output(json_encode($data));
 				}
-
-				// echo "<pre>";
-				// var_dump($data);
-				// echo "</pre>";
-
 
 			}else if(isset($travel) && !empty($travel) && $travel == "food"){
 				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
@@ -254,34 +293,8 @@ class Travel extends CI_Controller {
 
 		}else if($base == "http://104.199.199.61/kaohsiung/test"){
 
-			// $url = @file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc96");
-			// if ($url) {//判斷是否抓取成功
-			// 	echo $url;
-			// }else {
-			// 	$true = $this->travel_model->get_all($place);
-			//
-			// 	@$data = new stdClass();//陣列轉換class後存自此變數;@禁止顯示錯誤
-			// 	$data->Total = $this->travel_model->get_num($place);
-			// 	$data->title = "高雄景點";
-			//
-			// 	foreach ($true as $key => $value) {
-			// 		if ($key === 0) {
-			// 			$data->Img01 = $value['Picture'];
-			// 			$data->Name01 = $value['Name'];
-			// 			$data->OpenTime01 = $value['Opentime'];
-			// 			$data->Tel01 = $value['Tel'];
-			// 			$data->FullAddress01 = $value['Add'];
-			// 		}else {
-			// 			@$data->result->records[$key]->Picture1 = $value['Picture'];
-			// 			@$data->result->records[$key]->Name = $value['Name'];
-			// 			@$data->result->records[$key]->Opentime = $value['Opentime'];
-			// 			@$data->result->records[$key]->Tel = $value['Tel'];
-			// 			@$data->result->records[$key]->Add = $value['Add'];
-			// 		}
-			// 	}
-			// 	$this->output->set_content_type('application/json')->set_output(json_encode($data));
-			// }
-
+			
+			}
 		}
 	}
 
@@ -425,17 +438,18 @@ class Travel extends CI_Controller {
  				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
  				$data = json_decode($url);
  				// var_dump($data);
+				$where = array('id' => $i);
+				$datas = $this->travel_model->get_once($place, $where);
 
- 				$view_data["Name"] = $data->result->records[$i]->Name;//名稱
- 				$view_data["Introduction"] = $this->noempty("", $data->result->records[$i]->Description);//描述
- 				$view_data["OpenTime"] = $this->noempty("開放時間：", $data->result->records[$i]->Opentime);//開放時間
- 				$view_data["Tel"] = $this->noempty("電話：", $data->result->records[$i]->Tel);//電話
- 				$view_data["FullAddress"] = $this->noempty("地址：", $data->result->records[$i]->Add);//地址
- 				$PyPx = $data->result->records[$i]->Py.",".$data->result->records[$i]->Px;//Py經度Px緯度
- 				$view_data["Driving"] = $this->noempty("如何到達：", "123");//如何到達
- 				$view_data["Title"] = $this->noempty("-", $data->result->records[$i]->Picdescribe1);
- 				$view_data["Images"] = $data->result->records[$i]->Picture1;//照片
- 				$view_data["Count"] = count($data->result->records[$i]->Picture1);
+ 				$view_data["Name"] = $datas->Name;//名稱
+ 				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
+ 				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
+ 				$view_data["Tel"] = $this->noempty("電話：", $datas->Tel);//電話
+ 				$view_data["FullAddress"] = $this->noempty("地址：", $datas->Add);//地址
+ 				$PyPx = $datas->Py.",".$datas->Px;//Py經度Px緯度
+ 				$view_data["Driving"] = $this->noempty("如何到達：", $datas->Driving);//如何到達
+ 				$view_data["Images"] = $datas->Picture;//照片
+ 				$view_data["Count"] = count($datas->Picture);
 
  				$GPS = $this->noempty("", $PyPx);//GPS經緯度
 
@@ -511,6 +525,7 @@ class Travel extends CI_Controller {
 				$marker['position'] = $GPS;
 				$this->googlemaps->add_marker($marker);
 				$view_data['map'] = $this->googlemaps->create_map();
+
 			}else if (isset($place) && !empty($place) && $place == "kaohsiung") {
 				$view_data["place"] = "高雄";
 				$view_data["travel"] = "美食";
