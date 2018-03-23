@@ -12,8 +12,19 @@ class Travel_model extends CI_Model {
     return $table;
   }
 
+  //抓取特定資料
+  public function get_once($table, $where){
+    return $this->db->get_where($table, $where)->row();
+  }
+
   //抓取全部資料
   public function get_all($table){
+    return $this->db->get($table)->result_array();
+  }
+
+  //抓取ID
+  public function get_id($table){
+    $this->db->select('id');
     return $this->db->get($table)->result_array();
   }
 
