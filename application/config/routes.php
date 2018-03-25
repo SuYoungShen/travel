@@ -64,6 +64,7 @@ $route['tainan/(:any)'] = function($place){
 $route["alltaiwan"] = 'travel/alltaiwan';
 
 $route['details/(:any)/(:any)/(:any)'] = 'travel/details/$1/$2/$3';
+$route['AMessage'] = 'travel/AMessage';//20180325
 
 $route['food_place'] = 'travel/food_place';
 $route['default_controller'] = 'travel/';
