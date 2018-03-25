@@ -297,6 +297,14 @@ class Travel extends CI_Controller {
 
 		}else if($base == "http://104.199.199.61/kaohsiung/test"){
 
+			$url = @file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
+
+			$data = json_decode($url);
+
+			$data->Total = count($data->result->records);
+			echo $data->Total;
+			// $this->output->set_content_type('application/json')->set_output(json_encode($data));
+
 
 		}
 	}
@@ -405,34 +413,35 @@ class Travel extends CI_Controller {
 											"description" => "旅遊途中一定要嘗試美食",
 											"page" => "detals_main.php"
 											);
+
 	if (isset($travel) && !empty($travel) && $travel == "attractions") {
 
 		if (isset($place) && !empty($place) && $place == "pingtung") {
-				$view_data["place"] = "屏東";
-				$view_data["travel"] = "景點";
-
-				$data = json_decode($this->pingtung());
-
-				$view_data["Name"] = $data->data[$i]->Name;//名稱
-				$view_data["Introduction"] = $this->noempty("", $data->data[$i]->Introduction);//描述
-				$view_data["OpenTime"] = $this->noempty("開放時間：", $data->data[$i]->OpenTime);//開放時間
-				$view_data["Tel"] = $this->noempty("電話：", $data->data[$i]->Tel);//電話
-				$view_data["FullAddress"] = $this->noempty("地址：", $data->data[$i]->FullAddress);//地址
-				$view_data["Driving"] = $this->noempty("如何到達：", $data->data[$i]->Driving);//如何到達
-				$view_data["Title"] = $this->noempty("-", $data->data[$i]->Title);
-				$view_data["Images"] = $data->data[$i]->Images;//照片
-				$view_data["Count"] = count($data->data[$i]->Images);
-
-				$GPS = $this->noempty("", $data->data[$i]->Coordinate);//GPS經緯度
-
-				$config['center'] = $GPS;
-				$config['zoom'] = '16';
-				$this->googlemaps->initialize($config);
-
-				$marker = array();
-				$marker['position'] = $GPS;
-				$this->googlemaps->add_marker($marker);
-				$view_data['map'] = $this->googlemaps->create_map();
+				// $view_data["place"] = "屏東";
+				// $view_data["travel"] = "景點";
+				//
+				// $data = json_decode($this->pingtung());
+				//
+				// $view_data["Name"] = $data->data[$i]->Name;//名稱
+				// $view_data["Introduction"] = $this->noempty("", $data->data[$i]->Introduction);//描述
+				// $view_data["OpenTime"] = $this->noempty("開放時間：", $data->data[$i]->OpenTime);//開放時間
+				// $view_data["Tel"] = $this->noempty("電話：", $data->data[$i]->Tel);//電話
+				// $view_data["FullAddress"] = $this->noempty("地址：", $data->data[$i]->FullAddress);//地址
+				// $view_data["Driving"] = $this->noempty("如何到達：", $data->data[$i]->Driving);//如何到達
+				// $view_data["Title"] = $this->noempty("-", $data->data[$i]->Title);
+				// $view_data["Images"] = $data->data[$i]->Images;//照片
+				// $view_data["Count"] = count($data->data[$i]->Images);
+				//
+				// $GPS = $this->noempty("", $data->data[$i]->Coordinate);//GPS經緯度
+				//
+				// $config['center'] = $GPS;
+				// $config['zoom'] = '16';
+				// $this->googlemaps->initialize($config);
+				//
+				// $marker = array();
+				// $marker['position'] = $GPS;
+				// $this->googlemaps->add_marker($marker);
+				// $view_data['map'] = $this->googlemaps->create_map();
 
 			}else if(isset($place) && !empty($place) && $place == "kaohsiung"){
 
@@ -444,6 +453,7 @@ class Travel extends CI_Controller {
 				$where = array('id' => $i);
 				$datas = $this->travel_model->get_once($place, $where);
 
+				$view_data["Id"] = $i;
  				$view_data["Name"] = $datas->Name;//名稱
  				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
  				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
@@ -565,9 +575,21 @@ class Travel extends CI_Controller {
 				$view_data['map'] = $this->googlemaps->create_map();
 			}
 		}
-
-
 		$this->load->view("layout", $view_data);
+	}
+
+	//20180325
+	function AMessage(){
+		$rowid = $this->input->post('Message');
+
+		if ($rowid) {//先查詢是否有這筆商品
+			$dataResponse["sys_code"] = 200;
+			$dataResponse["sys_msg"] = $rowid;
+		}else {
+			$dataResponse["sys_code"] = 404;
+			$dataResponse["sys_msg"] = "商品移除失敗...";
+		}
+		echo json_encode($dataResponse);
 	}
 
 	function noempty($title, $value){//不等於空
