@@ -130,7 +130,7 @@
               if (typeof(datas.Img01) === typeof("string")) {//資料有照片會跑這段
                 //移除無照片的眶
                 $(".comments-pan").remove();
-                if (count >= 1) {
+                if (count > 1) {//如果按送出超過一次以上
                   $('figure').remove();
                   $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
                   $('.two').append('<ul class="grid-lod effect-2 main_left" id="grid"></ul>');
@@ -178,7 +178,7 @@
 
                  if (typeof(Img) === typeof("string")) {//如果有照片為字串
 
-                   if ((i%2) == 0 || i == 1) {
+                   if ((i%2) == 0) {
                      $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
                    }else {
                      $(".main_right").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
@@ -186,7 +186,7 @@
 
                  }else if(Img === false){//如果沒照片為false
 
-                   if ((i%2) == 0 || i == 1) {
+                   if ((i%2) == 0) {
                      $(".two .comments-pan .comments-reply").append("<li><section><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></button></section></li>");
                    }else {
                      $(".three .comments-pan .comments-reply").append("<li><section><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></button></section></li>");
