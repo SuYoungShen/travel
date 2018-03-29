@@ -195,9 +195,9 @@
               }
             },
             error: function(data){
-              <?php if ($sys_code === 404) { ?>
-                alert(<?=$sys_msg;?>);
-              <?php } ?>
+              if (data.sys_code === 404) {
+                alert(data.sys_msg);
+              }
             }
           });
         }
