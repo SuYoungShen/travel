@@ -414,6 +414,11 @@ class Travel extends CI_Controller {
 											"page" => "detals_main.php"
 											);
 
+		$where = array('id' => $i);
+		$view_data['AM'] = $this->travel_model->get_once_all('attractions_message', $where);
+		//AMT = attractions_message_total 特定景點留言有幾筆
+		$view_data['AMT'] = count($view_data['AM']);
+
 	if (isset($travel) && !empty($travel) && $travel == "attractions") {
 
 		if (isset($place) && !empty($place) && $place == "pingtung") {
@@ -578,23 +583,52 @@ class Travel extends CI_Controller {
 		$this->load->view("layout", $view_data);
 	}
 
-	//20180325
+	//20180325景點留言
 	function AMessage(){
-		$rowid = $this->input->post('Message');
 
-		if ($rowid) {//先查詢是否有這筆商品
-			$dataResponse["sys_code"] = 200;
-			$dataResponse["sys_msg"] = $rowid;
-		}else {
-			$dataResponse["sys_code"] = 404;
-			$dataResponse["sys_msg"] = "商品移除失敗...";
+		$Id = $this->input->post('Id');
+		$Place = $this->input->post('Place');
+		$Post_Name = $this->input->post('Post_Name');
+		$Post_Email = $this->input->post('Post_Email');
+		$Message = $this->input->post('Message');
+
+		$where = array('id' => $Id);
+		if ($this->travel_model->get_once($Place, $where)) {
+			date_default_timezone_set("Asia/Taipei");//設定時區
+
+			$data = array(
+				'id' => $Id,
+				'name' => $Post_Name,
+				'email' => $Post_Email,
+				'message' => $Message,
+				'create_date' => date('Y-m-d'),
+				'create_time' => date('H:i:s')
+			);
+			$How = $this->travel_model->insert('attractions_message', $data);
+			if ($How) {
+				$dataResponse["sys_code"] = 200;
+				$dataResponse["sys_msg"] = "留言成功";
+			}else {
+				$dataResponse["sys_code"] = 404;
+				$dataResponse["sys_msg"] = "留言失敗...";
+			}
+			echo json_encode($dataResponse);
 		}
-		echo json_encode($dataResponse);
 	}
 
 	function noempty($title, $value){//不等於空
 		$data = !empty($value)? $title.$value : "";
 		return $data;
+	}
+
+	function send_mail(){
+		$this->email->from('suyoungshen@gmail.com', 'Su Shen');
+		$this->email->to('k90218104@gcloud.csu.edu.tw');
+
+		$this->email->subject('您好!');
+		$this->email->message('這是測試信件');
+
+		$this->email->send();
 	}
 }
 ?>
