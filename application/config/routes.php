@@ -63,6 +63,8 @@ $route['tainan/(:any)'] = function($place){
 };
 $route["alltaiwan"] = 'travel/alltaiwan';
 
+$route["send_mail"] = 'travel/send_mail';//20180329
+
 $route['details/(:any)/(:any)/(:any)'] = 'travel/details/$1/$2/$3';
 $route['AMessage'] = 'travel/AMessage';//20180325
 
