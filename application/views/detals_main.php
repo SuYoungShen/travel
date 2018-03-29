@@ -20,7 +20,6 @@
             </ol>
 
             <div class="carousel-inner">
-
               <div class="item active">
                 <img src="<?=$Images; ?>" alt="" class="img-responsive"/>
               </div>
@@ -55,33 +54,35 @@
         </div>
 
       <div class="comments-pan">
-        <h3>3 Comments</h3>
+        <h3><?=$AMT;?> Comments</h3>
         <ul class="comments-reply">
+          <?php foreach ($AM as $key => $value){ ?>
           <li>
             <!-- <figure>
             <img src="http://i-pingtung.com/Utility/DisplayImage?id=11160" alt="" class="img-responsive"/>
             </figure> -->
 
             <section>
-            <h4>Anna Greenfield      <a href="#">Reply</a></h4>
-            <div class="date-pan">January 26, 2016</div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed volutpat eu nibh ultricies semper. Vivamus porta, felis vitae facilisis sodales, felis est iaculis orci, et ornare sem mauris ut turpis. Pellentesque vitae tortor nec tellus hendrerit aliquam. Donec condimentum leo eu ullamcorper scelerisque pellentesque urna rhoncus.
-          </section>
+              <h4><?=$value['name'];?><a href="#">Reply</a></h4>
+              <div class="date-pan"><?=$value['create_date'].' '.$value['create_time'];?></div>
+              <?=$value['message'];  ?>
+            </section>
 
-            <ol class="reply-pan">
-            <li>
-              <figure>
-                <!-- <img src="http://i-pingtung.com/Utility/DisplayImage?id=11160" alt="" class="img-responsive"/> -->
-              </figure>
-              <section>
-                <h4>Johnathan Doe  <a href="#">Reply</a></h4>
-                <div class="date-pan">January 26, 2016</div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed volutpat eu nibh ultricies semper. Vivamus porta, felis vitae facilisis sodales, felis est iaculis orci, et ornare sem mauris ut turpis. Pellentesque vitae tortor nec tellus hendrerit aliquam. Donec condimentum leo eu ullamcorper scelerisque pellentesque urna rhoncus.
-              </section>
-            </li>
-          </ol>
+            <!-- <ol class="reply-pan">
+              <li>
+                <figure>
+                  <img src="http://i-pingtung.com/Utility/DisplayImage?id=11160" alt="" class="img-responsive"/>
+                </figure>
+                <section>
+                  <h4>Johnathan Doe  <a href="#">Reply</a></h4>
+                  <div class="date-pan">January 26, 2016</div>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed volutpat eu nibh ultricies semper. Vivamus porta, felis vitae facilisis sodales, felis est iaculis orci, et ornare sem mauris ut turpis. Pellentesque vitae tortor nec tellus hendrerit aliquam. Donec condimentum leo eu ullamcorper scelerisque pellentesque urna rhoncus.
+                </section>
+              </li>
+            </ol> -->
           </li>
-          <li>
+        <?php } ?>
+          <!-- <li>
             <figure>
               <img src="http://i-pingtung.com/Utility/DisplayImage?id=11160" alt="" class="img-responsive"/>
             </figure>
@@ -91,7 +92,7 @@
               <div class="date-pan">January 26, 2016</div>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed volutpat eu nibh ultricies semper. Vivamus porta, felis vitae facilisis sodales, felis est iaculis orci, et ornare sem mauris ut turpis. Pellentesque vitae tortor nec tellus hendrerit aliquam. Donec condimentum leo eu ullamcorper scelerisque pellentesque urna rhoncus.
             </section>
-          </li>
+          </li> -->
         </ul>
 
         <div class="commentys-form">
@@ -137,16 +138,35 @@
         type: 'POST',
         data:{
           Id: Id,
-          Name: Post_Name,
-          Email: Post_Email,
+          Place: '<?=$this->uri->segment(3);?>',//找尋網址的第三個值
+          Post_Name: Post_Name,
+          Post_Email: Post_Email,
           Message: Message
         },
         dataType: "json",
         success: function(datas){
-          alert(datas.sys_msg);
+          if (datas.sys_code === 200) {
+            swal(
+              datas.sys_msg,
+              '',
+              'success'
+            )
+            .then(function (){
+              location.reload();
+            });
+          }
         },
         error: function(data){
-          alert('123');
+          if (data.sys_code === 404) {
+            swal(
+              datas.sys_msg,
+              '',
+              'danger'
+            )
+            .then((value) => {
+              location.reload();
+            });
+          }
         }
       });
     });
