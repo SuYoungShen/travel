@@ -18,7 +18,7 @@
 
     <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid one">
       <figure class="effect-oscar">
-        <img src="https://lh3.google.com/u/0/d/1dLXV2duH9qLA96m5rS65QjQxjlomRUVa=w1920-h917-iv2" alt="" class="img-responsive main_Img"/>
+        <img src="https://lh3.googleusercontent.com/gKNfKsbOj6Wet5GWLrKeG7v5gSmGd-pUPdkgit9KgTsE1XxPH0SRcdvJEj4XVWerx5CONI6OUuqGKbSZ9Gde=w1920-h934" alt="" class="img-responsive main_Img"/>
         <figcaption></figcaption>
       </figure>
     </section>
