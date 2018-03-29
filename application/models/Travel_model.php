@@ -6,13 +6,20 @@ class Travel_model extends CI_Model {
     $this->load->database();
   }
 
-  //資料表有幾筆資料
+  //抓取資料在資料表有幾筆
   public function get_num($table){
     $table = $this->db->get($table)->num_rows();
     return $table;
   }
 
-  //抓取特定資料
+
+  public function get_once_all($table, $where){
+    $this->db->where($where);
+    $table = $this->db->get($table)->result_array();
+    return $table;
+  }
+
+  //抓取特定一筆資料
   public function get_once($table, $where){
     return $this->db->get_where($table, $where)->row();
   }
