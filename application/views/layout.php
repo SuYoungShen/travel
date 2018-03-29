@@ -12,19 +12,11 @@
 
      <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
 
-     <!-- style -->
      <link href="assets/css/style.css" rel="stylesheet" type="text/css">
-     <!-- style -->
-
-     <!-- bootstrap -->
      <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-     <!-- responsive -->
-
      <link href="assets/css/responsive.css" rel="stylesheet" type="text/css">
-
-     <!-- font-awesome -->
      <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-     <!-- font-awesome -->
+     <link href="assets/css/sweetalert2.min.css" rel="stylesheet">
 
      <link href="assets/css/effects/set2.css" rel="stylesheet" type="text/css">
      <link href="assets/css/effects/normalize.css" rel="stylesheet" type="text/css">
@@ -32,6 +24,7 @@
      <link href="assets/css/bootstrap-select.min.css"  rel="stylesheet" type="text/css" >
      <script src="assets/js/jquery.min.js" type="text/javascript"></script>
      <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+     <script src="assets/js/sweetalert2.min.js" type="text/javascript"></script>
 
      <!-- jquery cookie -->
      <script src="assets/js/jquery.cookie.js" type="text/javascript"></script>
