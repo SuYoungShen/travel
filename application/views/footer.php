@@ -160,7 +160,7 @@
                 $(".comments-reply li section").append("<p>時間："+datas.OpenTime01+"</p>")
                 $(".comments-reply li section").append("<p>電話："+datas.Tel01+"</p>")
                 $(".comments-reply li section").append("<p>地址："+datas.FullAddress01+"</p>")
-                $(".comments-reply li section").append("<button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></button>");
+                $(".comments-reply li section").append("<button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+datas.Id01+"' target='_blank'>詳細內容</a></button>");
               }
 
               $("#title").text(datas.title);//抬頭
@@ -212,6 +212,7 @@
         }
 
         function tainan(datas, i){
+          Id = datas.data[i].id;//id
           Img = false;//無照片
           Name = datas.data[i].name;//地點名
           OpenTime = datas.data[i].opentime;//開放時間

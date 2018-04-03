@@ -94,32 +94,37 @@
             </section>
           </li> -->
         </ul>
+        <?php if ($this->session->userdata('login_status') == true) { ?>
+          <div class="commentys-form">
+            <h4>心得分享</h4>
+            <div class="row">
+              <form>
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                  <input type="hidden" name="Id" value="<?=$Id;?>">
+                  <input name="Post_Name" type="text"
+                  placeholder="<?=$this->session->userdata('user_name');?>"
+                  value="<?=$this->session->userdata('user_name');?>">
+                </div>
 
-        <div class="commentys-form">
-        <h4>心得分享</h4>
-        <div class="row">
-          <form>
-            <div class="col-xs-12 col-sm-6 col-md-6">
-              <input type="hidden" name="Id" value="<?=$Id;?>">
-              <input name="Post_Name" type="text" placeholder="姓名">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                  <input name="Post_Email" type="email"
+                  placeholder="<?=$this->session->userdata('email');?>"
+                  value="<?=$this->session->userdata('user_email');?>">
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <textarea name="Message" placeholder="分享您對此景點的心得..."></textarea>
+                </div>
+
+                <div class="text-center">
+                  <input id="Submit" type="button" value="送出">
+                </div>
+              </form>
             </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-6">
-              <input name="Post_Email" type="email" placeholder="Email">
-            </div>
-
-            <div class="clearfix"></div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12">
-            <textarea name="Message" placeholder="分享您對此景點的心得..."></textarea>
           </div>
-
-            <div class="text-center">
-            <input id="Submit" type="button" value="送出">
-          </div>
-          </form>
-        </div>
-      </div>
+        <?php } ?>
       </div>
   </div>
 </main>
@@ -146,29 +151,26 @@
         dataType: "json",
         success: function(datas){
           if (datas.sys_code === 200) {
-            swal(
-              datas.sys_msg,
-              '',
-              'success'
-            )
-            .then(function (){
-              location.reload();
-            });
+            swalls('OK', datas.sys_msg, 'success');
           }
         },
         error: function(data){
           if (data.sys_code === 404) {
-            swal(
-              datas.sys_msg,
-              '',
-              'danger'
-            )
-            .then((value) => {
-              location.reload();
-            });
+            swalls('Error',datas.sys_msg, 'danger');
+
           }
         }
       });
     });
   });
+
+  function swalls(statuss, sys_msg, status){
+    swal(
+      statuss,
+      sys_msg,
+      status
+    ).then(function (){
+      location.reload();
+    });
+  }
 </script>

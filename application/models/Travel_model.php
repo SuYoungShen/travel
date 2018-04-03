@@ -26,6 +26,7 @@ class Travel_model extends CI_Model {
 
   //抓取全部資料
   public function get_all($table){
+    // $this->db->select('id, Picture, Name, phone');
     return $this->db->get($table)->result_array();
   }
 
@@ -50,6 +51,8 @@ class Travel_model extends CI_Model {
   public function get_date($table){
     return $this->db->select('Update_Date')->get($table)->row();
   }
+
+
 
 }
 ?>

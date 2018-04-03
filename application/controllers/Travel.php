@@ -7,6 +7,7 @@ class Travel extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('travel_model');
+		$this->load->model('travel_member');
 	}
 
 	function index()
@@ -122,7 +123,7 @@ class Travel extends CI_Controller {
 
 			if (isset($travel) && !empty($travel) && $travel == "attractions") {
 
-				$url = @file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
+				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
 
 				if ($url) {//判斷是否抓取成功
 					$data = json_decode($url);
@@ -157,11 +158,10 @@ class Travel extends CI_Controller {
 								'Update_Date' => $Today_Date
 							);
 							$true = $this->travel_model->insert($place, $datas);
-						}
+						}//end foreach
+
 						if($true){
-
 							$datas = $this->travel_model->get_all($place);
-
 							foreach ($datas as $key => $value) {
 								if ($key === 0) {
 									$data->Id01 = $value['id'];
@@ -169,9 +169,7 @@ class Travel extends CI_Controller {
 									$data->Id[$key] = $value['id'];
 								}
 							}
-
-						$this->output->set_content_type('application/json')->set_output(json_encode($data));
-
+							$this->output->set_content_type('application/json')->set_output(json_encode($data));
 						}else {
 							$res['sys_code'] = 404;
 							$res['sys_msg'] = "新增資料庫失敗";
@@ -205,12 +203,11 @@ class Travel extends CI_Controller {
 								$true = $this->travel_model->update($place, $datas, $where);
 							}
 							if($true){
-
-								$this->output->set_content_type('application/json')->set_output(json_encode($data));
-							}else {
-								$res['sys_code'] = 404;
-								$res['sys_msg'] = "更新資料庫失敗";
-								$this->output->set_content_type('application/json')->set_output(json_encode($res));
+									$this->output->set_content_type('application/json')->set_output(json_encode($data));
+								}else {
+									$res['sys_code'] = 404;
+									$res['sys_msg'] = "更新資料庫失敗";
+									$this->output->set_content_type('application/json')->set_output(json_encode($res));
 							}
 						}else {//END 比對時間
 
@@ -224,12 +221,7 @@ class Travel extends CI_Controller {
 									$data->Id[$key] = $value['id'];
 								}
 							}
-							$data->Img01 = $data->result->records[0]->Picture1;
-							$data->Name01 = $data->result->records[0]->Name;
-							$data->OpenTime01 = $data->result->records[0]->Opentime;
-							$data->Tel01 = $data->result->records[0]->Tel;
-							$data->FullAddress01 = $data->result->records[0]->Add;
-							$data->Total = count($data->result->records);
+
 							$this->output->set_content_type('application/json')->set_output(json_encode($data));
 						}
 						//20180323
@@ -238,20 +230,20 @@ class Travel extends CI_Controller {
 					//當api掛掉時，抓取資料庫資料
 					$true = $this->travel_model->get_all($place);
 
-					@$data = new stdClass();//陣列轉換class後存自此變數;@禁止顯示錯誤
+					$data = new stdClass();//陣列轉換class後存自此變數;@禁止顯示錯誤
 					$data->Total = $this->travel_model->get_num($place);
 					$data->title = "高雄景點";
 
 					foreach ($true as $key => $value) {
 						if ($key === 0) {
-							$data->Id = $value['id'];
+							$data->Id01 = $value['id'];
 							$data->Img01 = $value['Picture'];
 							$data->Name01 = $value['Name'];
 							$data->OpenTime01 = $value['Opentime'];
 							$data->Tel01 = $value['Tel'];
 							$data->FullAddress01 = $value['Add'];
 						}else {
-							@$data->result->records[$key]->id = $value['id'];
+							$data->Id[$key] = $value['id'];
 							@$data->result->records[$key]->Picture1 = $value['Picture'];
 							@$data->result->records[$key]->Name = $value['Name'];
 							@$data->result->records[$key]->Opentime = $value['Opentime'];
@@ -260,8 +252,8 @@ class Travel extends CI_Controller {
 						}
 					}
 					$this->output->set_content_type('application/json')->set_output(json_encode($data));
-				}
 
+				}
 			}else if(isset($travel) && !empty($travel) && $travel == "food"){
 				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
 				$data = json_decode($url);
@@ -279,7 +271,8 @@ class Travel extends CI_Controller {
 				// var_dump($data);
 				// echo "</pre>";
 				$this->output->set_content_type('application/json')->set_output(json_encode($data));
-			}
+
+			}//food
 		}else if($base == "http://104.199.199.61/kaohsiung/attractions"){//用來看景點資料
 
 			$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
@@ -294,18 +287,32 @@ class Travel extends CI_Controller {
 			$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
 			$data = json_decode($url);
 			$this->output->set_content_type('application/json')->set_output(json_encode($data));
-
 		}else if($base == "http://104.199.199.61/kaohsiung/test"){
+			$place = "kaohsiung";
+			$true = $this->travel_model->get_all($place);
 
-			$url = @file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
+			$data = new stdClass();//陣列轉換class後存自此變數;@禁止顯示錯誤
+			$data->Total = $this->travel_model->get_num($place);
+			$data->title = "高雄景點";
 
-			$data = json_decode($url);
-
-			$data->Total = count($data->result->records);
-			echo $data->Total;
-			// $this->output->set_content_type('application/json')->set_output(json_encode($data));
-
-
+			foreach ($true as $key => $value) {
+				if ($key === 0) {
+					$data->Id01 = $value['id'];
+					$data->Img01 = $value['Picture'];
+					$data->Name01 = $value['Name'];
+					$data->OpenTime01 = $value['Opentime'];
+					$data->Tel01 = $value['Tel'];
+					$data->FullAddress01 = $value['Add'];
+				}else {
+					$data->Id[$key] = $value['id'];
+					@$data->result->records[$key]->Picture1 = $value['Picture'];
+					@$data->result->records[$key]->Name = $value['Name'];
+					@$data->result->records[$key]->Opentime = $value['Opentime'];
+					@$data->result->records[$key]->Tel = $value['Tel'];
+					@$data->result->records[$key]->Add = $value['Add'];
+				}
+			}
+			$this->output->set_content_type('application/json')->set_output(json_encode($data));
 		}
 	}
 
@@ -332,6 +339,7 @@ class Travel extends CI_Controller {
 				// echo "</pre>";
 
 				$arrayData->title = "台南景點";
+				$arrayData->Id01 = $arrayData->data[0]->id;//第一筆資料的名稱
 				$arrayData->Name01 = $arrayData->data[0]->name;//第一筆資料的名稱
 				$arrayData->OpenTime01 = $arrayData->data[0]->opentime;
 				$arrayData->Tel01 = $arrayData->data[0]->tel;
@@ -406,7 +414,8 @@ class Travel extends CI_Controller {
 
 	}
 
-	function details($travel, $place, $i){//說明頁面
+//說明頁面
+	function details($travel, $place, $i){
 		$view_data = array(
 											'title' => "旅遊與美食",
 											"sub_title" => "Travel && Food",
@@ -616,17 +625,191 @@ class Travel extends CI_Controller {
 		}
 	}
 
+	function login(){
+		$view_data = array(
+			'title' => '歡迎登入',
+			'form_title' => '登入',
+			'button' => '登入',
+			'path_title' => '沒有帳號嗎!',
+			'path' => 'register',
+			'page' => 'logins.php'
+		);
+		if ($this->travel_member->chk_login_status()) {
+			redirect(base_url());
+		}else {
+			if ($this->input->post('rule') == 'login') {
+
+				$email = $this->input->post('email');
+				$pass = sha1($this->input->post('pass'));
+
+				if($this->travel_member->chk_login_user($email, $pass)){
+					$this->travel_member->do_login($email);
+					$view_data['sys_code'] = 200;
+					$view_data['sys_msg'] = '恭喜登入成功';
+					redirect(base_url());
+				}else {
+					$view_data['sys_code'] = 404;
+					$view_data['sys_msg'] = '你是誰，賣來亂...?';
+				}
+			}
+		}
+		$this->load->view('login', $view_data);
+	}
+
+	function register(){
+		$view_data = array(
+			'title' => '歡迎註冊',
+			'form_title' => '註冊',
+			'button' => '註冊',
+			'path_title' => '回登入囉~~~',
+			'path' => 'login',
+			'page' => 'register.php'
+		);
+
+		if ($this->input->post('rule') == 'register') {
+
+			$dataArray = array(
+				'email' => $this->input->post('email'),
+				'password' => $this->input->post('pass'),
+				'nickname' => $this->input->post('nickname'),
+				'phone' => $this->input->post('phone')
+			);
+
+			if (!empty($dataArray['email']) && !empty($dataArray['password']) &&
+					!empty($this->input->post('re-pass')) && !empty($dataArray['nickname']) &&
+					!empty($dataArray['phone'])) {
+
+				if ($dataArray['password'] === $this->input->post('re-pass')) {
+
+					if(!$this->travel_member->get_once_by_email($dataArray['email'])){//確認有無五使用者
+						$dataArray['id'] = uniqid();
+						$dataArray['password'] = sha1($dataArray['password']);
+						$dataArray["create_date"] = date("Y-m-d");
+						$dataArray["create_time"] = date("H:i:s");
+
+						if ($this->travel_member->insert($dataArray)) {
+							$view_data["sys_code"] = 200;
+							$view_data["sys_msg"] = '新增成功！';
+							$this->travel_member->do_login($dataArray['email']);
+							redirect(base_url());
+						}else {
+							$view_data['sys_code'] = 404;
+							$view_data['sys_msg'] = '新增失敗...?';
+						}
+					}else {
+						$view_data['sys_code'] = 404;
+						$view_data['sys_msg'] = '信箱有人使用過囉...?';
+					}
+				}else {
+					$view_data['sys_code'] = 404;
+					$view_data['sys_msg'] = '密碼不一致...!';
+				}
+			}else {
+				$view_data['sys_code'] = 404;
+				$view_data['sys_msg'] = '表單上未填寫完成';
+			}
+		}
+		$this->load->view('login', $view_data);
+	}
+
+	function logout(){
+		if ($this->travel_member->logout()) {
+			redirect(base_url());
+		}
+	}
+
+	function forget(){
+		$view_data = array(
+			'title' => '忘記密碼了嗎',
+			'form_title' => '請輸入資料',
+			'button' => '查詢',
+			'path_title' => '回登入囉~~~',
+			'path' => 'login',
+			'page' => 'forget.php'
+		);
+		if ($this->travel_member->chk_login_status()) {
+			redirect(base_url(''));
+		}else {
+			if ($this->input->post('rule') == 'forget') {
+
+				$dataArray = array(
+					'email' => $this->input->post('email'),
+					'phone' => $this->input->post('phone')
+				);
+
+				if (!empty($dataArray['email']) && !empty($dataArray['phone'])) {
+					$user = $this->travel_member->get_once_by_email($dataArray['email']);
+					if($user['phone'] === $dataArray['phone']){
+
+						$this->session->set_flashdata('news', $user['id']);
+						$view_data['sys_code'] = 200;
+						$view_data['sys_msg'] = '恭喜驗證完成，請嘗試輸入新密碼..?';
+
+					}else {
+						$view_data['sys_code'] = 404;
+						$view_data['sys_msg'] = '信箱有人使用過囉...?';
+					}
+				}else {
+					$view_data['sys_code'] = 404;
+					$view_data['sys_msg'] = '表單上未填寫完成';
+				}
+			}else if($this->input->post('rule') == 'news'){
+
+				$id = $this->input->post('id');
+				$dataArray = array(
+					'password' => $this->input->post('password')
+				);
+
+				if (!empty($dataArray['password']) && !empty($this->input->post('re-password') &&
+					$dataArray['password']) == $this->input->post('re-password')) {
+
+					$dataArray['password'] = sha1($dataArray['password']);
+
+					if ($this->travel_member->update($id, $dataArray)) {
+							$view_data["sys_code"] = "ok";
+							$view_data["sys_msg"] = '密碼更新成功，請嘗試用新密碼登入。';
+						}else {
+							$view_data["sys_code"] = 404;
+							$view_data["sys_msg"] = '發生錯誤，更新失敗';
+						}
+
+				}else {
+					$view_data['sys_code'] = 404;
+					$view_data['sys_msg'] = '密碼不一致哦~~~';
+				}
+			}
+		}
+		$this->load->view('login', $view_data);
+
+	}
+
+	//隱私權20180402
+	function privacy(){
+		$view_data = array(
+			'title' => '隱私權政策',
+			'page' => 'privacy.php'
+		);
+		$this->load->view('layout', $view_data);
+	}
+
+	function test(){
+
+	}
+
 	function noempty($title, $value){//不等於空
 		$data = !empty($value)? $title.$value : "";
 		return $data;
 	}
 
 	function send_mail(){
+
 		$this->email->from('suyoungshen@gmail.com', 'Su Shen');
 		$this->email->to('k90218104@gcloud.csu.edu.tw');
 
 		$this->email->subject('您好!');
-		$this->email->message('這是測試信件');
+		$this->email->message('
+		<a href="https://tw.yahoo.com/">點八</a>
+		');
 
 		$this->email->send();
 	}

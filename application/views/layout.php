@@ -8,7 +8,8 @@
      <meta name="author" content="">
      <base href="<?=base_url();?>">
 
-     <title>:: avana LLC ::</title>
+     <title>歡迎~<?=$this->session->userdata('user_name')? $this->session->userdata('user_name'):"您";?>的到來</title>
+     <!-- <title>:: avana LLC ::</title> -->
 
      <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
 
@@ -22,15 +23,15 @@
      <link href="assets/css/effects/normalize.css" rel="stylesheet" type="text/css">
      <link href="assets/css/effects/component.css"  rel="stylesheet" type="text/css" >
      <link href="assets/css/bootstrap-select.min.css"  rel="stylesheet" type="text/css" >
+     <script src="assets/js/sweetalert2.min.js" type="text/javascript"></script>
      <script src="assets/js/jquery.min.js" type="text/javascript"></script>
      <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-     <script src="assets/js/sweetalert2.min.js" type="text/javascript"></script>
 
      <!-- jquery cookie -->
      <script src="assets/js/jquery.cookie.js" type="text/javascript"></script>
      <!-- jquery cookie -->
      <?php
-     if (base_url().uri_string() != "http://104.199.199.61/"){
+     if ($this->uri->segment(1) == 'details'){
        echo $map['js'];
      }
      ?>
@@ -60,6 +61,7 @@
        background-color: #3085a3;
      }
    </style>
+
   </head>
 
     <body>
