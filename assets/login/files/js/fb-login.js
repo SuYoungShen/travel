@@ -33,9 +33,10 @@ $('.btn-face').click(function(event) {
           // console.log(phpInfo);
           $.post(url, phpInfo, function(res){
             if(res.sys_code == 200){
-            
+
               window.setTimeout(function(){
-                location.reload();
+                // location.reload();
+                location.href = "https://sushentravel.tk/memberInfo";//20180406更改
               }, 100);
             }else{
               swal(
