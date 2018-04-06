@@ -12,6 +12,11 @@ class Travel_model extends CI_Model {
     return $table;
   }
 
+  //20180406取得特定欄位
+  public function get_once_field($table, $where, $select){
+    $this->db->select($select);
+    return $this->db->get_where($table, $where)->row();
+  }
 
   public function get_once_all($table, $where){
     $this->db->where($where);
@@ -45,6 +50,11 @@ class Travel_model extends CI_Model {
   public function update($table, $datas, $where){
     $this->db->where($where);
     return  $this->db->update($table, $datas);
+  }
+
+  public function delete($table, $where){
+    $this->db->where($where);
+    return $this->db->delete($table);
   }
 
   //抓取日期
