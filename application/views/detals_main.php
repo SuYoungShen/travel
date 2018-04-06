@@ -1,3 +1,8 @@
+<style>
+.swal2-popup{
+  font-size: 2rem;
+}
+</style>
 <main role="main-inner-wrapper" class="container" onload="initialize()" onunload="GUnload()">
     <div class="blog-details">
       <article class="post-details" id="post-details">
@@ -41,7 +46,21 @@
           </div>
         <?php } ?>
         <div class="enter-content">
-          <p class="bg-info"><?=$Introduction;?></p>
+
+          <p class="bg-info"><?=$Introduction;?>
+            <button type="button" class="btn btn-success">
+              <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+            </button>
+          </p>
+          <script type="text/javascript">
+            $(document).ready(function() {
+              $('.btn').click(function(event) {
+                /* Act on the event */
+                $(this).toggleClass('btn-danger');
+                
+              });
+            });
+          </script>
           <p class="bg-danger">
             <?=$OpenTime;?><br/>
             <?=$Tel;?><br/>
@@ -138,29 +157,37 @@
       var Post_Email = $("input[name='Post_Email']").val();
       var Message = $("textarea[name='Message']").val();
 
-      $.ajax({
-        url:"AMessage",
-        type: 'POST',
-        data:{
-          Id: Id,
-          Place: '<?=$this->uri->segment(3);?>',//找尋網址的第三個值
-          Post_Name: Post_Name,
-          Post_Email: Post_Email,
-          Message: Message
-        },
-        dataType: "json",
-        success: function(datas){
-          if (datas.sys_code === 200) {
-            swalls('OK', datas.sys_msg, 'success');
-          }
-        },
-        error: function(data){
-          if (data.sys_code === 404) {
-            swalls('Error',datas.sys_msg, 'danger');
+      if(Id != '' && Post_Name != '' && Post_Email != '' && Message != '' ){
+        $.ajax({
+          url:"AMessage",
+          type: 'POST',
+          data:{
+            Id: Id,
+            Place: '<?=$this->uri->segment(3);?>',//找尋網址的第三個值
+            Post_Name: Post_Name,
+            Post_Email: Post_Email,
+            Message: Message
+          },
+          dataType: "json",
+          success: function(datas){
+            if (datas.sys_code === 200) {
+              swalls('OK', datas.sys_msg, 'success');
+            }
+          },
+          error: function(data){
+            if (data.sys_code === 404) {
+              swalls('Error',datas.sys_msg, 'danger');
 
+            }
           }
-        }
-      });
+        });
+      }else{
+        swal(
+          '錯誤',
+          '你的心得ㄋ?',
+          'error'
+        );
+      }
     });
   });
 
