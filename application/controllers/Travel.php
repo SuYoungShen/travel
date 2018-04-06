@@ -606,7 +606,9 @@ class Travel extends CI_Controller {
 			date_default_timezone_set("Asia/Taipei");//設定時區
 
 			$data = array(
+				'am_id' => uniqid(),
 				'id' => $Id,
+				'place' => $Place,
 				'name' => $Post_Name,
 				'email' => $Post_Email,
 				'message' => $Message,
@@ -646,7 +648,7 @@ class Travel extends CI_Controller {
 					$this->travel_member->do_login($email);
 					$view_data['sys_code'] = 200;
 					$view_data['sys_msg'] = '恭喜登入成功';
-					redirect(base_url());
+					redirect(base_url('memberInfo'));
 				}else {
 					$view_data['sys_code'] = 404;
 					$view_data['sys_msg'] = '你是誰，賣來亂...?';
@@ -691,7 +693,7 @@ class Travel extends CI_Controller {
 							$view_data["sys_code"] = 200;
 							$view_data["sys_msg"] = '新增成功！';
 							$this->travel_member->do_login($dataArray['email']);
-							redirect(base_url());
+							redirect(base_url('memberInfo'));
 						}else {
 							$view_data['sys_code'] = 404;
 							$view_data['sys_msg'] = '新增失敗...?';
@@ -780,7 +782,97 @@ class Travel extends CI_Controller {
 			}
 		}
 		$this->load->view('login', $view_data);
+	}
 
+	//會員資訊20180403
+	function memberInfo(){
+
+		$view_data = array(
+			'instructions' => '這裡可以修改自己的基本資料、查看曾經留言與喜愛的景點。',
+			'page' => 'member.php'
+		);
+
+		if ($this->travel_member->chk_login_status()) {
+			$user = $this->travel_member->get_once_by_email($this->session->userdata('user_email'));
+			$Place = $this->travel_model->get_all('place');
+
+			//用Email去搜尋，景景點留言，後存到AM=attractions_message
+			$where = "email = "."'".$user['email']."'";
+			//抓取留言訊息
+			$AM = $this->travel_model->get_once_all('attractions_message', $where);
+
+			$Att = array();
+
+			for ($i=0; $i < count($AM); $i++) {
+				for ($j=0; $j < count($Place); $j++) {
+					array_push($Att, $this->travel_model->get_once_all($Place[$j]['en_place'], "id="."'".$AM[$i]['id']."'"));
+					$Att[$i][$j]['ch_place'] = $Place[$j]['ch_place'];
+				}
+			}
+
+			//景點資訊
+			$view_data['Att'] = $Att;
+			//訊息
+			$view_data['AM'] = $AM;
+
+			$view_data['user_name'] = $user['nickname'];
+			$view_data['type'] = $user['type'];
+			$view_data['user_email'] = $user['email'];
+			$view_data['user_phone'] = $user['phone'];
+
+			if ($this->input->post('rule') == "update") {
+				$dataArray = $this->input->post('datas');
+
+				if ($dataArray['type'] == 'normal') {
+					if (!empty($dataArray['nickname']) && !empty($dataArray['email'])  && !empty($dataArray['password'])) {
+						$dataArray['password'] = sha1($dataArray['password']);
+						if($this->travel_member->update($user['id'], $dataArray)){
+							$view_data['sys_title'] = '更新成功!';
+							$view_data['sys_msg'] = '資料已經更新成功囉';
+							$view_data['sys_status'] = 'success';
+						}else {
+							$view_data['sys_title'] = '更新失敗!';
+							$view_data['sys_msg'] = '如要更新資料，請密碼也填寫';
+							$view_data['sys_status'] = 'error';
+						}
+					}else {
+						// 20180404
+						if (empty($dataArray['password'])) {
+							$view_data['sys_msg'] = '如要更新資料，請密碼也填寫';
+						}else {
+							$view_data['sys_msg'] = '姓名與Email必填，如要更新資料，請密碼也填寫';
+						}
+						$view_data['sys_title'] = '資料請填寫完整!';
+						$view_data['sys_status'] = 'error';
+					}
+					echo json_encode($view_data);
+				}else if ($dataArray['type'] == 'facebook') {
+
+					if (!empty($dataArray['nickname']) && !empty($dataArray['email'])) {
+
+						if($this->travel_member->update($user['id'], $dataArray)){
+							$view_data['sys_title'] = '更新成功!';
+							$view_data['sys_msg'] = '資料已經更新成功囉';
+							$view_data['sys_status'] = 'success';
+						}else {
+							$view_data['sys_title'] = '更新失敗!';
+							$view_data['sys_msg'] = '更新失敗';
+							$view_data['sys_status'] = 'error';
+						}
+					}else {
+						$view_data['sys_title'] = '更新失敗!';
+						$view_data['sys_msg'] = '如沒要更新，請別亂!';
+						$view_data['sys_status'] = 'error';
+					}
+					echo json_encode($view_data);
+				}
+				// 20180404
+			}else {
+				$this->load->view('layout', $view_data);
+			}
+		}else{
+			redirect(base_url('/login'));
+		}
 	}
 
 	//隱私權20180402
@@ -793,7 +885,13 @@ class Travel extends CI_Controller {
 	}
 
 	function test(){
-
+		$daraRespone = array();
+		if ($this->travel_member->chk_login_status()) {
+			$daraRespone = 200;
+		}else {
+			$daraRespone = 404;
+		}
+		echo json_encode($daraRespone);
 	}
 
 	function noempty($title, $value){//不等於空
