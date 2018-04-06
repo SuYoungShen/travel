@@ -29,6 +29,7 @@ class Api extends CI_Controller {
           $view_data["sys_code"] = 200;
           $view_data["sys_msg"] = '新增成功！';
           $this->travel_member->do_login($dataArray['email']);
+					redirect(base_url(''));
         }else {
           $view_data['sys_code'] = 404;
           $view_data['sys_msg'] = '新增失敗...?';
@@ -38,6 +39,7 @@ class Api extends CI_Controller {
           $this->travel_member->do_login($dataArray['email']);
           $view_data["sys_code"] = 200;
           $view_data["sys_msg"] = '登入成功！';
+
         }else {
           $view_data['sys_code'] = 404;
           $view_data['sys_msg'] = '信箱有人使用過囉...?';
@@ -86,7 +88,7 @@ class Api extends CI_Controller {
 							// $view_data["sys_code"] = 200;
 							// $view_data["sys_msg"] = '新增成功！';
 							$this->travel_member->do_login($dataArray['email']);
-							redirect(base_url());
+							redirect(base_url(''));
 						}else {
 							$view_data['sys_code'] = 404;
 							$view_data['sys_msg'] = '新增失敗...?';
@@ -107,6 +109,54 @@ class Api extends CI_Controller {
 		$this->load->view('login', $view_data);
 	}
 
+	//20180406 Att景點，Am訊息
+	function Att_and_Am(){
+		$dataArray = array('id' => $this->input->post('id'), 'email' => $this->session->userdata('user_email'));
+		if (!empty($dataArray['id']) && !empty($dataArray['email'])) {
+			$where = "id="."'".$dataArray['id']."'"."&& email="."'".$dataArray['email']."'";
+			$Am = $this->travel_model->get_once('attractions_message', $where);
+
+			$select = "ch_place";
+			$where = "en_place=".'"'.$Am->place.'"';
+			$place = $this->travel_model->get_once_field('place', $where, $select);
+
+			$select = "Picture, Name, Description, Opentime, Tel, Add";
+			$where = "id="."'".$dataArray['id']."'";
+			$Att = $this->travel_model->get_once_field($Am->place, $where, $select);
+
+			$dataArray['data']["Am"] = $Am;
+			$dataArray['data']["Place"] = $place;
+			$dataArray['data']["Att"] = $Att;
+			$this->output->set_content_type('application/json')->set_output(json_encode($dataArray['data']));
+		}
+	}
+
+	//20180406刪除留言
+	function Delete_Am(){
+		$dataArray = array(
+			'am_id' => $this->input->post('am_id'),
+			'id' => $this->input->post('id'),
+			'email' => $this->input->post('email')
+		);
+
+		if (!empty($dataArray['am_id']) && !empty($dataArray['id']) && !empty($dataArray['email'])) {
+
+			$where = "am_id="."'".$dataArray['am_id']."'"."&& id="."'".$dataArray['id']."'"."&& email="."'".$dataArray['email']."'";
+			if ($this->travel_model->delete('attractions_message', $where)) {
+				$view_data['sys_code'] = 200;
+				$view_data['sys_title'] = '成功';
+				$view_data['sys_msg'] = "恭喜刪除留言成功!!!";
+				$view_data['status'] = 'success';
+
+			}else {
+				$view_data['sys_code'] = 404;
+				$view_data['sys_title'] = '失敗';
+				$view_data['sys_msg'] = "刪除留言失敗!!!";
+				$view_data['status'] = 'error';
+			}
+			$this->output->set_content_type('application/json')->set_output(json_encode($view_data));
+		}
+	}
 
 	function test(){
 
