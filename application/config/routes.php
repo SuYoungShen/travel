@@ -71,11 +71,14 @@ $route["login"] = 'travel/login';//20180330
 $route["logout"] = 'travel/logout';//20180330
 $route["register"] = 'travel/register';//20180331
 $route["forget"] = 'travel/forget';//20180331
+$route["memberInfo"] = 'travel/memberInfo';//up memberInfo->memberInfoUp 20180404
 
 $route['details/(:any)/(:any)/(:any)'] = 'travel/details/$1/$2/$3';
 $route['AMessage'] = 'travel/AMessage';//20180325
 
-$route['third_Fb_Login'] = 'api/third_Fb_Login';//20180402 FB用
+$route['api/third_Fb_Login'] = 'api/third_Fb_Login';//20180402 FB用
+$route['Att_and_Am'] = 'api/Att_and_Am';//20180406
+$route['Delete_Am'] = 'api/Delete_Am';//20180406
 
 $route['test'] = 'travel/test';//20180331測試業面
 
