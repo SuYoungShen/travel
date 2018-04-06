@@ -79,6 +79,7 @@ class Travel_member extends CI_Model {
 
   //會員更新
   function update($id, $dataArray){
+    $this->set_last_login($id);
     $this->db->where('id', $id);
     return $this->db->update('user_main', $dataArray);
   }
