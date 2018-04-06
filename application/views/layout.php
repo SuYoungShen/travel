@@ -26,10 +26,18 @@
      <script src="assets/js/sweetalert2.min.js" type="text/javascript"></script>
      <script src="assets/js/jquery.min.js" type="text/javascript"></script>
      <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-
+     <!-- 警告視窗 -->
+     <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
+     <script type="text/javascript" src="assets/js/sweetalert2.min.js"></script>
+     <!-- 警告視窗 -->
      <!-- jquery cookie -->
      <script src="assets/js/jquery.cookie.js" type="text/javascript"></script>
      <!-- jquery cookie -->
+
+     <!-- DataTable -->
+     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.bootstrap.min.css">
+     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+     <!-- DataTable -->
      <?php
      if ($this->uri->segment(1) == 'details'){
        echo $map['js'];

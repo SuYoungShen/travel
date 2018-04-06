@@ -37,6 +37,12 @@
 <script type="text/javascript" src="assets/js/sweetalert2.min.js"></script>
 <!-- 警告視窗 -->
 
+	<style>
+		.btn-face{
+			width: calc(100%);
+		}
+	</style>
+
 </head>
 <body>
 
@@ -53,10 +59,10 @@
 						Facebook
 					</a>
 
-					<a href="https://colorlib.com/etc/lf/Login_v5/index.html#" class="btn-google m-b-20">
+					<!-- <a href="https://colorlib.com/etc/lf/Login_v5/index.html#" class="btn-google m-b-20">
 						<img src="assets/login/files/image/icon-google.png" alt="GOOGLE">
 						Google
-					</a>
+					</a> -->
 					<?php include($page); ?>
 					<div class="container-login100-form-btn m-t-17">
 						<button class="login100-form-btn">
@@ -65,6 +71,11 @@
 					</div>
 
 					<div class="w-full text-center p-t-55">
+						<a href="<?=base_url();?>" class="txt2 bo1">
+							<span class="txt2">
+								回上一頁
+							</a>
+						|
 						<a href="<?=$path;?>" class="txt2 bo1">
 						<span class="txt2">
 							<?=$path_title;?>

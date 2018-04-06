@@ -2,21 +2,21 @@
 
 	Theme Name: avana LLC
 
-	Template URI: 
+	Template URI:
 
-	Description: 
+	Description:
 
 	Author:
 
-	Author URI: 
+	Author URI:
 
-	License: 
+	License:
 
 	License URI:
 
 	Version: 1.0
 
-	
+
 
 	1. Body style
 
@@ -28,7 +28,7 @@
 
 	5. About
 
-	
+
 
 */
 
@@ -390,7 +390,7 @@ article[role="pge-title-content"].contact-header p a:hover{color:#fb5353; text-d
 
 .commentys-form form{ margin-top:30px}
 
-.commentys-form input[type="text"],.commentys-form input[type="email"],.commentys-form input[type="url"],.commentys-form textarea{ font-size:21px; line-height:22px; color:#404040; padding-bottom:26px; border-bottom:2px solid #bbbbbb; width:100%; display:block; border-left:none; border-right:none; border-top:none; background-color:transparent; outline:none}
+.commentys-form input[type="password"],.commentys-form input[type="text"],.commentys-form input[type="email"],.commentys-form input[type="url"],.commentys-form textarea{ font-size:21px; line-height:22px; color:#404040; padding-bottom:26px; border-bottom:2px solid #bbbbbb; width:100%; display:block; border-left:none; border-right:none; border-top:none; background-color:transparent; outline:none}
 
 .commentys-form textarea{ margin-top:57px}
 
@@ -399,4 +399,3 @@ article[role="pge-title-content"].contact-header p a:hover{color:#fb5353; text-d
 .commentys-form input[type="button"]{ padding:0 36px; text-transform:uppercase; display:inline-block; font-size:21px; line-height:60px; color:#FFF; font-weight: bold; text-align:center; border:none; outline:none; background-color:#fb5353; margin-top:50px}
 
 .commentys-form input[type="button"]:hover{ background-color:#ff5c5c}
-
