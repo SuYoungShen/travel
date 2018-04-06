@@ -43,6 +43,16 @@
       <script src="assets/js/html5shiv.js" type="text/javascript"></script>
       <script src="assets/js/bootstrap-select.min.js" type="text/javascript"></script>
 
+      <script src="assets/js/memberInfoUp.js" type="text/javascript"></script>
+
+      <!-- DataTable -->
+      <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap.min.js"></script>
+      <!-- DataTable -->
+
+
       <script type="text/javascript">
 
         $(document).ready(function() {
@@ -136,6 +146,9 @@
                   $('.two').append('<ul class="grid-lod effect-2 main_left" id="grid"></ul>');
                   $('.three').append('<ul class="grid-lod effect-2 main_right" id="grid"></ul>');
                 }
+
+                $('figure').remove();
+                $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
 
                 $('.main_Img').attr("src", datas.Img01);
                 $('figcaption').html("<h2>"+datas.Name01+"</h2>");
