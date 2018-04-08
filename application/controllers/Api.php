@@ -132,7 +132,7 @@ class Api extends CI_Controller {
 	}
 
 	//20180406刪除留言
-	function Delete_Am(){
+	function delete_Am(){
 		$dataArray = array(
 			'am_id' => $this->input->post('am_id'),
 			'id' => $this->input->post('id'),
@@ -156,6 +156,72 @@ class Api extends CI_Controller {
 			}
 			$this->output->set_content_type('application/json')->set_output(json_encode($view_data));
 		}
+	}
+
+	//add like 功能 in 20180407
+	function user_like(){
+		$dataResponse = array();
+
+		date_default_timezone_set("Asia/Taipei");
+		$dataArray = array(
+			"id" => uniqid(),
+			"place_id"  => $this->input->post('place_id'),
+			"place"  => $this->input->post('place'),
+			"user_id" => $this->session->userdata('user_id'),
+			"create_date" => date('Y-m-d'),
+		  "create_time" => date('H:i:s')
+		);
+
+		if ($this->travel_member->chk_login_status()) {
+			$action = $this->input->post('action');//抓取新增或刪除 in 20180409
+			if ($action == "insert") {
+				if (!empty($dataArray['place_id']) && !empty($dataArray['place']) && !empty($dataArray['user_id'])) {
+					if ($this->travel_model->insert('user_like', $dataArray)) {
+						$dataResponse['sys_code'] = 200;
+						$dataResponse['sys_msg_title'] = "成功!!!";
+						$dataResponse['sys_msg'] = "已加入您的最愛";
+						$dataResponse['status'] = "success";
+					}else {
+						$dataResponse['sys_code'] = 404;
+						$dataResponse['sys_msg_title'] = "失敗!!!";
+						$dataResponse['sys_msg'] = "加入失敗";
+						$dataResponse['status'] = "error";
+					}
+				}else {
+					$dataResponse['sys_code'] = 404;
+					$dataResponse['sys_msg_title'] = "注意!!!";
+					$dataResponse['sys_msg'] = "如喜歡此景點，請先登入會員!";
+					$dataResponse['status'] = "warning";
+				}
+			}else if($action == "delete"){
+				if (!empty($dataArray['place_id']) && !empty($dataArray['place']) && !empty($dataArray['user_id'])) {
+					$where = "id =".'"'.$this->input->post('id').'"';
+					if ($this->travel_model->delete('user_like', $where)) {
+						$dataResponse['sys_code'] = 200;
+						$dataResponse['sys_msg_title'] = "移除成功!!!";
+						$dataResponse['sys_msg'] = "已移除您的最愛";
+						$dataResponse['status'] = "warning";
+					}else {
+						$dataResponse['sys_code'] = 404;
+						$dataResponse['sys_msg_title'] = "失敗!!!";
+						$dataResponse['sys_msg'] = "加入失敗";
+						$dataResponse['status'] = "error";
+					}
+				}else {
+					$dataResponse['sys_code'] = 404;
+					$dataResponse['sys_msg_title'] = "注意!!!";
+					$dataResponse['sys_msg'] = "如喜歡此景點，請先登入會員!";
+					$dataResponse['status'] = "warning";
+				}
+			}
+		}else {
+			$dataResponse['sys_code'] = 404;
+			$dataResponse['sys_msg_title'] = "注意!!!";
+			$dataResponse['sys_msg'] = "如喜歡此景點，請先登入會員!";
+			$dataResponse['status'] = "warning";
+		}
+
+		echo json_encode($dataResponse);
 	}
 
 	function test(){
