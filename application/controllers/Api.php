@@ -158,6 +158,55 @@ class Api extends CI_Controller {
 		}
 	}
 
+	//20180409 Att景點，UL = user_like
+	function Att_and_UL(){
+		$dataArray = array('id' => $this->input->post('id'));
+		if (!empty($dataArray['id'])) {
+			$where = "id="."'".$dataArray['id']."'";
+			$user_like = $this->travel_model->get_once('user_like', $where);
+
+			$select = "ch_place";
+			$where = "en_place=".'"'.$user_like->place.'"';
+			$place = $this->travel_model->get_once_field('place', $where, $select);
+
+			$select = "Picture, Name, Description, Opentime, Tel, Add";
+			$where = "id="."'".$user_like->place_id."'";
+			$Att = $this->travel_model->get_once_field($user_like->place, $where, $select);
+
+			$dataArray['data']["user_like"] = $user_like;
+			$dataArray['data']["Place"] = $place;
+			$dataArray['data']["Att"] = $Att;
+			$this->output->set_content_type('application/json')->set_output(json_encode($dataArray['data']));
+		}
+	}
+
+	//20180409刪除最愛
+	function delete_UL(){
+		$dataArray = array(
+			'like_id' => $this->input->post('like_id'),
+			'place_id' => $this->input->post('place_id'),
+			'user_id' => $this->session->userdata('user_id')
+		);
+
+		if (!empty($dataArray['like_id']) && !empty($dataArray['place_id']) && !empty($dataArray['user_id'])) {
+
+			$where = "id="."'".$dataArray['like_id']."'"."&& place_id="."'".$dataArray['place_id']."'"."&& user_id="."'".$dataArray['user_id']."'";
+			if ($this->travel_model->delete('user_like', $where)) {
+				$view_data['sys_code'] = 200;
+				$view_data['sys_title'] = '成功';
+				$view_data['sys_msg'] = "恭喜刪除留言成功!!!";
+				$view_data['status'] = 'success';
+
+			}else {
+				$view_data['sys_code'] = 404;
+				$view_data['sys_title'] = '失敗';
+				$view_data['sys_msg'] = "刪除留言失敗!!!";
+				$view_data['status'] = 'error';
+			}
+			$this->output->set_content_type('application/json')->set_output(json_encode($view_data));
+		}
+	}
+
 	//add like 功能 in 20180407
 	function user_like(){
 		$dataResponse = array();
