@@ -78,7 +78,10 @@ $route['AMessage'] = 'travel/AMessage';//20180325
 
 $route['api/third_Fb_Login'] = 'api/third_Fb_Login';//20180402 FB用
 $route['Att_and_Am'] = 'api/Att_and_Am';//20180406
-$route['Delete_Am'] = 'api/Delete_Am';//20180406
+$route['delete_Am'] = 'api/delete_Am';//20180406
+$route['user_like'] = 'api/user_like';//add like 功能 in 20180407
+$route['Att_and_UL'] = 'api/Att_and_UL';//add Att_and_UL 功能 in 20180409
+$route['delete_UL'] = 'api/delete_UL';//add delete_UL 功能 in 20180409
 
 $route['test'] = 'travel/test';//20180331測試業面
 
