@@ -62,7 +62,16 @@ class Travel_model extends CI_Model {
     return $this->db->select('Update_Date')->get($table)->row();
   }
 
-
+  //設定create日期
+  // function set_create_date($id){
+  //   date_default_timezone_set("Asia/Taipei");
+  //   $dataArray = array(
+  //     'create_date' => date('Y-m-d'),
+  //     'create_time' => date('H:i:s')
+  //   );
+  //   $this->db->where('id', $id);//以id當條件
+  //   $this->db->update('user_like', $dataArray);//更新最後登入時間
+  // }
 
 }
 ?>
