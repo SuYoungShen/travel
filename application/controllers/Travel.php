@@ -169,7 +169,7 @@ class Travel extends CI_Controller {
 									$data->Id[$key] = $value['id'];
 								}
 							}
-							$this->output->set_content_type('application/json')->set_output(json_encode($data));
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));//update 原$data -> $datas in 20180407
 						}else {
 							$res['sys_code'] = 404;
 							$res['sys_msg'] = "新增資料庫失敗";
@@ -198,11 +198,19 @@ class Travel extends CI_Controller {
 									'Px' => $value->Px,
 									'Update_Date' => $Today_Date
 								);
-								$where = "id ="."'".$id[$key]['id']."'";
+								$where = "id =".'"'.$id[$key]['id'].'"';
 
 								$true = $this->travel_model->update($place, $datas, $where);
 							}
 							if($true){
+
+								foreach ($id as $key => $value) {
+									if ($key === 0) {
+										$data->Id01 = $value['id'];
+									}else {
+										$data->Id[$key] = $value['id'];
+									}
+								}
 									$this->output->set_content_type('application/json')->set_output(json_encode($data));
 								}else {
 									$res['sys_code'] = 404;
@@ -243,7 +251,7 @@ class Travel extends CI_Controller {
 							$data->Tel01 = $value['Tel'];
 							$data->FullAddress01 = $value['Add'];
 						}else {
-							$data->Id[$key] = $value['id'];
+							@$data->Id[$key] = $value['id'];
 							@$data->result->records[$key]->Picture1 = $value['Picture'];
 							@$data->result->records[$key]->Name = $value['Name'];
 							@$data->result->records[$key]->Opentime = $value['Opentime'];
@@ -423,10 +431,19 @@ class Travel extends CI_Controller {
 											"page" => "detals_main.php"
 											);
 
-		$where = array('id' => $i);
+		$where = array('id' => $i);//景點編號 in 20180408
 		$view_data['AM'] = $this->travel_model->get_once_all('attractions_message', $where);
 		//AMT = attractions_message_total 特定景點留言有幾筆
 		$view_data['AMT'] = count($view_data['AM']);
+
+		$where = array(
+			'place_id' => $i,//景點編號
+			'place' => $place,
+			'user_id' => $this->session->userdata('user_id')
+		);//加入最愛用 in 20180408
+		$view_data['user_like'] = $this->travel_model->get_once('user_like', $where);
+		//總共有幾筆 in 20180409
+		$view_data['user_like_total'] = count($this->travel_model->get_once('user_like', $where));
 
 	if (isset($travel) && !empty($travel) && $travel == "attractions") {
 
@@ -467,7 +484,7 @@ class Travel extends CI_Controller {
 				$where = array('id' => $i);
 				$datas = $this->travel_model->get_once($place, $where);
 
-				$view_data["Id"] = $i;
+				$view_data["Id"] = $i;//景點ID
  				$view_data["Name"] = $datas->Name;//名稱
  				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
  				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
@@ -595,7 +612,7 @@ class Travel extends CI_Controller {
 	//20180325景點留言
 	function AMessage(){
 
-		$Id = $this->input->post('Id');
+		$Id = $this->input->post('Id');//景點id
 		$Place = $this->input->post('Place');
 		$Post_Name = $this->input->post('Post_Name');
 		$Post_Email = $this->input->post('Post_Email');
@@ -801,7 +818,8 @@ class Travel extends CI_Controller {
 			//抓取留言訊息
 			$AM = $this->travel_model->get_once_all('attractions_message', $where);
 
-			$Att = array();
+
+			$Att = array();//景點留言
 
 			for ($i=0; $i < count($AM); $i++) {
 				for ($j=0; $j < count($Place); $j++) {
@@ -809,11 +827,29 @@ class Travel extends CI_Controller {
 					$Att[$i][$j]['ch_place'] = $Place[$j]['ch_place'];
 				}
 			}
+			
+			//抓取全部的最愛 in 20180409
+			$where = "user_id = "."'".$user['id']."'";
+			$user_like = $this->travel_model->get_once_all('user_like', $where);
+
+			$Att_like = array();//我得最愛景點
+
+			for ($i=0; $i < count($user_like); $i++) {
+				for ($j=0; $j < count($Place); $j++) {
+					array_push($Att_like, $this->travel_model->get_once_all($Place[$j]['en_place'], "id="."'".$user_like[$i]['place_id']."'"));
+					$Att_like[$i][$j]['ch_place'] = $Place[$j]['ch_place'];
+				}
+			}
 
 			//景點資訊
 			$view_data['Att'] = $Att;
 			//訊息
 			$view_data['AM'] = $AM;
+
+			//我得最愛景點資訊
+			$view_data['Att_like'] = $Att_like;
+			//我得最愛
+			$view_data['user_like'] = $user_like;
 
 			$view_data['user_name'] = $user['nickname'];
 			$view_data['type'] = $user['type'];
