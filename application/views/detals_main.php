@@ -197,7 +197,7 @@
 
       //最愛id in 20180409
       var user_like_id = $('.user_like_id').val();
-      
+
       //紅色愛心=已加入最愛 in 20180409
       if ($(this).hasClass('btn-danger')) {
         var action = 'delete';//刪除最愛 in 20180409
