@@ -213,7 +213,7 @@ class Api extends CI_Controller {
 					$dataResponse['sys_msg'] = "如喜歡此景點，請先登入會員!";
 					$dataResponse['status'] = "warning";
 				}
-			}
+			}//End Delete
 		}else {
 			$dataResponse['sys_code'] = 404;
 			$dataResponse['sys_msg_title'] = "注意!!!";
