@@ -113,7 +113,7 @@ class Api extends CI_Controller {
 	function Att_and_Am(){
 		$dataArray = array('id' => $this->input->post('id'), 'email' => $this->session->userdata('user_email'));
 		if (!empty($dataArray['id']) && !empty($dataArray['email'])) {
-			$where = "id="."'".$dataArray['id']."'"."&& email="."'".$dataArray['email']."'";
+			$where = "id = ". '"'.$dataArray['id'].'"';
 			$Am = $this->travel_model->get_once('attractions_message', $where);
 
 			$select = "ch_place";
@@ -140,7 +140,7 @@ class Api extends CI_Controller {
 		);
 
 		if (!empty($dataArray['am_id']) && !empty($dataArray['id']) && !empty($dataArray['email'])) {
-
+			//更新成以下格式 in 20180409
 			$where = "am_id="."'".$dataArray['am_id']."'"."&& id="."'".$dataArray['id']."'"."&& email="."'".$dataArray['email']."'";
 			if ($this->travel_model->delete('attractions_message', $where)) {
 				$view_data['sys_code'] = 200;
@@ -162,16 +162,18 @@ class Api extends CI_Controller {
 	function Att_and_UL(){
 		$dataArray = array('id' => $this->input->post('id'));
 		if (!empty($dataArray['id'])) {
-			$where = "id="."'".$dataArray['id']."'";
-			$user_like = $this->travel_model->get_once('user_like', $where);
 
+			$where = "id="."'".$dataArray['id']."'";
+			$user_like = $this->travel_model->get_once_all('user_like', $where);
+
+			//更新成以下格式 in 20180409
 			$select = "ch_place";
-			$where = "en_place=".'"'.$user_like->place.'"';
+			$where = "en_place=".'"'.$user_like[0]["place"].'"';
 			$place = $this->travel_model->get_once_field('place', $where, $select);
 
 			$select = "Picture, Name, Description, Opentime, Tel, Add";
-			$where = "id="."'".$user_like->place_id."'";
-			$Att = $this->travel_model->get_once_field($user_like->place, $where, $select);
+			$where = "id="."'".$user_like[0]["place_id"]."'";
+			$Att = $this->travel_model->get_once_field($user_like[0]["place"], $where, $select);
 
 			$dataArray['data']["user_like"] = $user_like;
 			$dataArray['data']["Place"] = $place;
