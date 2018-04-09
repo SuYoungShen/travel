@@ -67,7 +67,8 @@
             <?=$FullAddress;?><br/>
             <?=$Driving;?>
           </p>
-          <?=$map['html'];?>
+          <!-- 更新成以下程式 in 20180409 -->
+          <?=!isset($PyPx)?$map['html']:"";?>
         </iframe>
         <!-- <a href="https://www.google.com.tw/maps/place/屏東市大洲里65號">S</a> -->
         </div>
