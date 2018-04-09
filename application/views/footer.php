@@ -130,6 +130,7 @@
         }
 
         function viewAj(url, travel_val, place_val, count){//顯示內容
+
           $.ajax({
             url: url,
             type: 'POST',
@@ -163,7 +164,12 @@
                 // 第一筆資料
 
               }else {
-                console.log(datas);
+
+                //更新成以下程式 in 20180409
+                if (count > 1) {//如果按送出超過一次以上
+                  $(".comments-pan").remove();
+                }
+                //更新成以下程式 in 20180409
 
                 //因為無照片所以要移除有照片的tag
                 $(".one figure").remove();
@@ -206,15 +212,14 @@
                  }else if(Img === false){//如果沒照片為false
 
                    if ((i%2) == 0) {
-                     $(".two .comments-pan .comments-reply").append("<li><section><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></button></section></li>");
+                     $(".two .comments-pan .comments-reply").append("<li><section><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></button></section></li>");
                    }else {
-                     $(".three .comments-pan .comments-reply").append("<li><section><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+i+"' target='_blank'>詳細內容</a></button></section></li>");
+                     $(".three .comments-pan .comments-reply").append("<li><section><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></button></section></li>");
                    }
                  }
               }
             },
             error: function(data){
-              console.log(data);
               if (data.sys_code === 404) {
                 alert(data.sys_msg);
               }
@@ -235,7 +240,11 @@
         //20180409 更新成以下格式
         function tainan(datas, i){
           Id = datas[i]["id"];//id
-          Img = false;//無照片
+          if(datas[i]["Picture"] == ""){
+            Img = false;
+          }else {
+            Img = datas[i]["Picture"];
+          }//無照片
           Name = datas[i]["Name"];//地點名
           OpenTime = datas[i]["Opentime"];//開放時間
           Tel = datas[i]["Tel"];//電話
