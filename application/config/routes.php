@@ -51,13 +51,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['attractions_place'] = 'travel/attractions_place';
 $route['pingtung'] = 'travel/pingtung/';
-$route['kaohsiung'] = 'travel/kaohsiung/';
+$route['kaohsiung'] = 'travel/kaohsiung';
 $route['kaohsiung/(:any)'] = 'travel/kaohsiung/$1';
 $route['tainan'] = 'travel/tainan/';
-$route['tainan/(:any)'] = 'travel/tainan/$1';
+$route['tainan/(:any)'] = function($place){
+  if ($place == "attractions") {
+    return "travel/tainan/".$place;
+  }else if($place == "food"){
+    return "travel/tainan/".$place;
+  }
+};
 $route["alltaiwan"] = 'travel/alltaiwan';
 
-$route['detals/(:any)/(:any)/(:any)'] = 'travel/details/$1/$1/$1';
+$route["privacy"] = 'travel/privacy';//20180402隱私權
+
+$route["send_mail"] = 'travel/send_mail';//20180329
+
+$route["login"] = 'travel/login';//20180330
+$route["logout"] = 'travel/logout';//20180330
+$route["register"] = 'travel/register';//20180331
+$route["forget"] = 'travel/forget';//20180331
+$route["memberInfo"] = 'travel/memberInfo';//up memberInfo->memberInfoUp 20180404
+
+$route['details/(:any)/(:any)/(:any)'] = 'travel/details/$1/$2/$3';
+$route['AMessage'] = 'travel/AMessage';//20180325
+
+$route['api/third_Fb_Login'] = 'api/third_Fb_Login';//20180402 FB用
+$route['Att_and_Am'] = 'api/Att_and_Am';//20180406
+$route['delete_Am'] = 'api/delete_Am';//20180406
+$route['user_like'] = 'api/user_like';//add like 功能 in 20180407
+$route['Att_and_UL'] = 'api/Att_and_UL';//add Att_and_UL 功能 in 20180409
+$route['delete_UL'] = 'api/delete_UL';//add delete_UL 功能 in 20180409
+
+$route['test'] = 'travel/test';//20180331測試業面
 
 $route['food_place'] = 'travel/food_place';
 $route['default_controller'] = 'travel/';
