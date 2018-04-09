@@ -117,10 +117,14 @@
                   $(place).selectpicker('refresh');
                 }
                 $.each(datas, function(key, value) {
-                  $(place).append("<option value='"+key+"'>"+value+"</option>");
+                  $(place).append("<option value='"+value['en_place']+"'>"+value['ch_place']+"</option>");
                 });
                 $(place).selectpicker('refresh');
-              }
+              },
+            error: function(resError){
+              console.log(resError);
+
+            }
             });
             ++count;
         }
@@ -135,9 +139,9 @@
             },
             dataType: "json",
             success: function(datas){
-
+              // console.log(datas[1]["Name"]);
               // 第一筆資料
-              if (typeof(datas.Img01) === typeof("string")) {//資料有照片會跑這段
+              if (typeof(datas[0]["Picture"]) === typeof("string") && datas[0]["Picture"] != "") {//資料有照片會跑這段
                 //移除無照片的眶
                 $(".comments-pan").remove();
                 if (count > 1) {//如果按送出超過一次以上
@@ -149,16 +153,18 @@
 
                 $('figure').remove();
                 $('.one').append('<figure class="effect-oscar"><img src="" alt="" class="img-responsive main_Img"/><figcaption></figcaption></figure>');
-
-                $('.main_Img').attr("src", datas.Img01);
-                $('figcaption').html("<h2>"+datas.Name01+"</h2>");
-                $("figcaption").append("<p>時間："+datas.OpenTime01+"</p>")
-                $("figcaption").append("<p>電話："+datas.Tel01+"</p>")
-                $("figcaption").append("<p>地址："+datas.FullAddress01+"</p>")
-                $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/"+datas.Id01+"' target='_blank'>詳細內容</a>");
+                //20180409 更新成以下格式
+                $('.main_Img').attr("src", datas[0]["Picture"]);
+                $('figcaption').html("<h2>"+datas[0]["Name"]+"</h2>");
+                $("figcaption").append("<p>時間："+datas[0]["Opentime"]+"</p>")
+                $("figcaption").append("<p>電話："+datas[0]["Tel"]+"</p>")
+                $("figcaption").append("<p>地址："+datas[0]["Add"]+"</p>")
+                $("figcaption").append("<a href='details/"+travel_val+"/"+place_val+"/"+datas[0]["id"]+"' target='_blank'>詳細內容</a>");
                 // 第一筆資料
 
               }else {
+                console.log(datas);
+
                 //因為無照片所以要移除有照片的tag
                 $(".one figure").remove();
                 $(".two ul").remove();
@@ -168,17 +174,17 @@
                 $('.one').append('<div class="comments-pan"><ul class="comments-reply"><li><section></section></li></ul></div>');
                 $('.two').append('<div class="comments-pan"><ul class="comments-reply"></ul></div>');
                 $('.three').append('<div class="comments-pan"><ul class="comments-reply"></ul></div>');
-
-                $('.comments-reply li section').html("<h2>"+datas.Name01+"</h2>");
-                $(".comments-reply li section").append("<p>時間："+datas.OpenTime01+"</p>")
-                $(".comments-reply li section").append("<p>電話："+datas.Tel01+"</p>")
-                $(".comments-reply li section").append("<p>地址："+datas.FullAddress01+"</p>")
-                $(".comments-reply li section").append("<button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+datas.Id01+"' target='_blank'>詳細內容</a></button>");
+                //20180409 更新成以下格式
+                $('.comments-reply li section').html("<h2>"+datas[0]["Name"]+"</h2>");
+                $(".comments-reply li section").append("<p>時間："+datas[0]["Opentime"]+"</p>")
+                $(".comments-reply li section").append("<p>電話："+datas[0]["Tel"]+"</p>")
+                $(".comments-reply li section").append("<p>地址："+datas[0]["Add"]+"</p>")
+                $(".comments-reply li section").append("<button type='button' class='btn btn-primary'><a class='bg-primary' href='details/"+travel_val+"/"+place_val+"/"+datas[0]["id"]+"' target='_blank'>詳細內容</a></button>");
               }
 
-              $("#title").text(datas.title);//抬頭
+              $("#title").text(datas["title"]);//抬頭
 
-              for (var i = 1; i < datas.Total; i++) {
+              for (var i = 1; i < datas["total"]; i++) {
                 if (place_val == "kaohsiung") {
                   kaohsiung(datas, i);
                 }else if(place_val == "tainan"){
@@ -189,7 +195,7 @@
                    Tel = "電話："+Tel;
                  }
 
-                 if (typeof(Img) === typeof("string")) {//如果有照片為字串
+                 if (typeof(Img) === typeof("string")  && Img != "") {//如果有照片為字串
 
                    if ((i%2) == 0) {
                      $(".main_left").append("<li class='shown'><figure class='effect-oscar'><img src='"+Img+"' alt='' class='img-responsive'/><figcaption><h2>"+Name+"</h2><p>開放時間："+OpenTime+"</p><p>"+Tel+"</p><p>地址："+FullAddress+"</p><a href='details/"+travel_val+"/"+place_val+"/"+Id+"' target='_blank'>詳細內容</a></figcaption></figure></li>");
@@ -208,6 +214,7 @@
               }
             },
             error: function(data){
+              console.log(data);
               if (data.sys_code === 404) {
                 alert(data.sys_msg);
               }
@@ -215,22 +222,24 @@
           });
         }
 
+        //20180409 更新成以下格式
         function kaohsiung(datas, i){
-          Id = datas.Id[i];//id
-          Img = datas.result.records[i].Picture1;//照片
-          Name = datas.result.records[i].Name;//地點名
-          OpenTime = datas.result.records[i].Opentime;//開放時間
-          Tel = datas.result.records[i].Tel;//電話
-          FullAddress = datas.result.records[i].Add;//地址
+          Id = datas[i]["id"];//id
+          Img = datas[i]["Picture"];//照片
+          Name = datas[i]["Name"];//地點名
+          OpenTime = datas[i]["Opentime"];//開放時間
+          Tel = datas[i]["Tel"];//電話
+          FullAddress = datas[i]["Add"];//地址
         }
 
+        //20180409 更新成以下格式
         function tainan(datas, i){
-          Id = datas.data[i].id;//id
+          Id = datas[i]["id"];//id
           Img = false;//無照片
-          Name = datas.data[i].name;//地點名
-          OpenTime = datas.data[i].opentime;//開放時間
-          Tel = datas.data[i].tel;//電話
-          FullAddress = datas.data[i].address;//地址
+          Name = datas[i]["Name"];//地點名
+          OpenTime = datas[i]["Opentime"];//開放時間
+          Tel = datas[i]["Tel"];//電話
+          FullAddress = datas[i]["Add"];//地址
         }
 
         function alltaiwan(datas, i){
