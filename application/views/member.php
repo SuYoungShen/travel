@@ -106,10 +106,11 @@
             </tr>
           </thead>
           <tbody>
+
           <?php for ($i=0; $i < count($AM); $i++) { ?>
             <tr class="success" data-id=<?=$AM[$i]['id'];?>>
+              <td><?=$Att[$i]['ch_place'];?></td>
               <?php for ($j=0; $j < 1; $j++){ ?>
-                <td><?=$Att[$i][$j]['ch_place'];?></td>
                 <td><?=$Att[$i][$j]['Name'];?></td>
                 <td><?=$Att[$i][$j]['Opentime'];?></td>
                 <td><?=$Att[$i][$j]['Tel'];?></td>
@@ -150,8 +151,8 @@
 
               <?php for ($i=0; $i < count($user_like); $i++) { ?>
                 <tr class="info" data-id=<?=$user_like[$i]['id'];?>>
+                  <td><?=$Att_like[$i]['ch_place'];?></td>
                   <?php for ($j=0; $j < 1; $j++){ ?>
-                    <td><?=$Att_like[$i][$j]['ch_place'];?></td>
                     <td><?=$Att_like[$i][$j]['Name'];?></td>
                     <td><?=$Att_like[$i][$j]['Opentime'];?></td>
                     <td><?=$Att_like[$i][$j]['Tel'];?></td>
@@ -204,7 +205,6 @@ $(document).ready(function() {
   $('#AM').DataTable();
   $('#user_like').DataTable();
   $('tr').on('click', function (event) {
-
     var id = $(this).data("id");
     if ($(this).hasClass('success')) {//景點留言 in 20180409
 
@@ -215,7 +215,7 @@ $(document).ready(function() {
         data: {id: id}
       })
       .done(function(res) {
-
+        console.log(res);
         swal({
           title: res.Place.ch_place+"-"+res.Att.Name,
           imageUrl: res.Att.Picture,
@@ -252,8 +252,8 @@ $(document).ready(function() {
           }
         });
       })
-      .fail(function() {
-        console.log("error");
+      .fail(function(resError) {
+        console.log(resError);
       });
 
     }else if($(this).hasClass('info')){//我的最愛 in 20180409
@@ -283,8 +283,8 @@ $(document).ready(function() {
               type: 'POST',
               dataType: 'json',
               data: {
-                like_id: res.user_like.id,
-                place_id: res.user_like.place_id
+                like_id: res.user_like[0].id,//更新成此格式 in 20180409
+                place_id: res.user_like[0].place_id//更新成此格式 in 20180409
               }
             })
             .done(function(resOK) {
