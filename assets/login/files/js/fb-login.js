@@ -30,13 +30,11 @@ $('.btn-face').click(function(event) {
         //教學：https://developers.facebook.com/docs/facebook-login/web/accesstokens
         FB.api('/me?fields=id,name,email', function(phpInfo){
           var url = 'api/third_Fb_Login';
-          // console.log(phpInfo);
           $.post(url, phpInfo, function(res){
             if(res.sys_code == 200){
 
               window.setTimeout(function(){
-                // location.reload();
-                location.href = "https://sushentravel.tk/memberInfo";//20180406更改
+                location.href = "https://sushentravel.tk/memberInfo";//20180411 reload()->href
               }, 100);
             }else{
               swal(
