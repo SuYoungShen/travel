@@ -19,7 +19,7 @@
     <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 grid one">
       <figure class="about-content">
         <img src="https://lh3.googleusercontent.com/zdDkq3znXZHQTjrMiTq_n4-XOnkjAxgzTmkbxQOaComOp_e4JWuP2_dqMjv8J8OyD-8zhX-6N4dosO1-5zvr19cfhHG6iJg9pnZnbuvAgnix0iu741xOU-c7juciF0-fL9Y91WgMzK6mJu07ubXCQkhd7rhTrZJpnnl2AMvAXzn8dq4Ic7B6eya0VmDMS0XdCzgxierTUSL8fK9oz6XVp7wFbb5mlFLVkTcKYB5NbhXbWCHDkBSSkLryJE6RlnbuDJRHGDAcI0_TAUMnEwvQdW5fbv7cmOHf5W3ggdtIDMF5oE4Q1Ev1ji3P-1FSHKnQdzpC9Dn9wxUBqHxfmaq3pJJw_SAubQRRltlpSc09S51DMOvxcfZvpi8umadph9nL1aogo1hEQ6QV7PBgmUuDj5cveKNZodyHe4G26WyCviUJY1kqhEiORAdEWhkVuGR_R7_FkXsDBkqBdS-objCWLqIYbn2VYqm7Ka5HK79WD7WvEYFKHYQxYF4tqIdrSOc72e4NdmhCpkxIouCQNf0mg5M2qfxLL6GPhT1hi9An-nLVF9p3pXIi2qay1NjXp6Xp=w1364-h635" alt="" class="img-responsive main_Img"/>
-      
+
       </figure>
     </section>
 
