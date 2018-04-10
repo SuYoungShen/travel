@@ -89,6 +89,12 @@
             }else if (place_val == "tainan") {
               url = "tainan";
               viewAj(url, travel_val, place_val, count);
+            }else if(place_val == "chiayi"){
+              url = "chiayi";
+              viewAj(url, travel_val, place_val, count);
+            }else if(place_val == "chiayis"){
+              url = "chiayis";
+              viewAj(url, travel_val, place_val, count);
             }else if(place_val == "alltaiwan"){
               url = "alltaiwan";
               viewAj(url, travel_val, place_val, count);
@@ -109,6 +115,7 @@
               data: {data: travel_val},
               dataType: "json",
               success: function(datas){
+
                 $(place).selectpicker('show');
                 $(place).selectpicker('setStyle', 'btn-success');
 
@@ -123,7 +130,6 @@
               },
             error: function(resError){
               console.log(resError);
-
             }
             });
             ++count;
@@ -140,7 +146,6 @@
             },
             dataType: "json",
             success: function(datas){
-              // console.log(datas[1]["Name"]);
               // 第一筆資料
               if (typeof(datas[0]["Picture"]) === typeof("string") && datas[0]["Picture"] != "") {//資料有照片會跑這段
                 //移除無照片的眶
@@ -195,6 +200,10 @@
                   kaohsiung(datas, i);
                 }else if(place_val == "tainan"){
                   tainan(datas, i);
+                }else if(place_val == "chiayi"){
+                  chiayi(datas, i);
+                }else if(place_val == "chiayis"){
+                  chiayis(datas, i);
                 }
 
                  if (Tel != "") {
@@ -220,9 +229,7 @@
               }
             },
             error: function(data){
-              if (data.sys_code === 404) {
-                alert(data.sys_msg);
-              }
+              console.log(data);
             }
           });
         }
@@ -242,9 +249,37 @@
           Id = datas[i]["id"];//id
           if(datas[i]["Picture"] == ""){
             Img = false;
-          }else {
+          }else {//無照片
             Img = datas[i]["Picture"];
-          }//無照片
+          }
+          Name = datas[i]["Name"];//地點名
+          OpenTime = datas[i]["Opentime"];//開放時間
+          Tel = datas[i]["Tel"];//電話
+          FullAddress = datas[i]["Add"];//地址
+        }
+
+        //20180410 新增以下程式
+        function chiayi(datas, i){
+          Id = datas[i]["id"];//id
+          if(datas[i]["Picture"] == ""){
+            Img = false;
+          }else {//無照片
+            Img = datas[i]["Picture"];
+          }
+          Name = datas[i]["Name"];//地點名
+          OpenTime = datas[i]["Opentime"];//開放時間
+          Tel = datas[i]["Tel"];//電話
+          FullAddress = datas[i]["Add"];//地址
+        }
+
+        //20180410 新增以下程式
+        function chiayis(datas, i){
+          Id = datas[i]["id"];//id
+          if(datas[i]["Picture"] == "" || datas[i]["Picture"] == null){
+            Img = false;
+          }else {//無照片
+            Img = datas[i]["Picture"];
+          }
           Name = datas[i]["Name"];//地點名
           OpenTime = datas[i]["Opentime"];//開放時間
           Tel = datas[i]["Tel"];//電話
