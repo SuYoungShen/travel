@@ -61,6 +61,14 @@ $route['tainan/(:any)'] = function($place){
     return "travel/tainan/".$place;
   }
 };
+
+//新增 in 20180410
+$route['chiayi'] = 'travel/chiayi';//嘉義縣
+$route['chiayi/(:any)'] = 'travel/chiayi/$1';//嘉義縣
+$route['chiayis'] = 'travel/chiayis';//嘉義市
+$route['chiayis/(:any)'] = 'travel/chiayis/$1';//嘉義市
+//新增 in 20180410
+
 $route["alltaiwan"] = 'travel/alltaiwan';
 
 $route["privacy"] = 'travel/privacy';//20180402隱私權
