@@ -1435,7 +1435,7 @@ class Travel extends CI_Controller {
 				$this->googlemaps->add_marker($marker);
 				$view_data['map'] = $this->googlemaps->create_map();
 			}else if (isset($place) && !empty($place) && $place == "chiayis") {//add in 20180410
-				$view_data["place"] = "嘉義縣市";
+				$view_data["place"] = "嘉義縣美食";
 				$view_data["travel"] = "美食";
 
 				$where = array(
@@ -1602,6 +1602,7 @@ class Travel extends CI_Controller {
 							$view_data["sys_code"] = 200;
 							$view_data["sys_msg"] = '新增成功！';
 							$this->travel_member->do_login($dataArray['email']);
+							$this->send_mail();//20180411 新增
 							redirect(base_url('memberInfo'));
 						}else {
 							$view_data['sys_code'] = 404;
@@ -1695,7 +1696,6 @@ class Travel extends CI_Controller {
 
 	//會員資訊20180403
 	function memberInfo(){
-
 		$view_data = array(
 			'instructions' => '這裡可以修改自己的基本資料、查看曾經留言與喜愛的景點。',
 			'page' => 'member.php'
@@ -1835,12 +1835,13 @@ class Travel extends CI_Controller {
 	function send_mail(){
 
 		$this->email->from('suyoungshen@gmail.com', 'Su Shen');
-		$this->email->to('k90218104@gcloud.csu.edu.tw');
+		$this->email->to($this->session->userdata('user_email'));//20180411 更改
 
-		$this->email->subject('您好!');
-		$this->email->message('
-		<a href="https://tw.yahoo.com/">點八</a>
-		');
+		$this->email->subject("歡迎".$this->session->userdata('user_name')."加入!");//20180411 更改
+		$this->email->message("
+		<h2 style='color:red;font-weight:bold;'>恭喜".$this->session->userdata('user_name')."註冊成功</h2>
+		<p>您可透過連結到網站<a href='https://sushentravel.tk/'>https://sushentravel.tk/</a></p>
+		");//20180411 更改
 
 		$this->email->send();
 	}
