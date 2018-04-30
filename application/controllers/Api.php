@@ -210,6 +210,32 @@ class Api extends CI_Controller {
 		}
 	}
 
+	//20180430刪除地區功能
+	function delete_place(){
+		$dataArray = array(
+			'rule' => $this->input->post('rule'),
+			'place_id' => $this->input->post('place_id')
+		);
+
+		if (!empty($dataArray['rule']) && $dataArray['rule'] == "Delete" && !empty($dataArray['place_id'])) {
+
+			$where = "id="."'".$dataArray['place_id']."'";
+			if ($this->travel_model->delete('place', $where)) {
+				$view_data['sys_code'] = 200;
+				$view_data['sys_title'] = '成功';
+				$view_data['sys_msg'] = "恭喜刪除成功!!!";
+				$view_data['status'] = 'success';
+
+			}else {
+				$view_data['sys_code'] = 404;
+				$view_data['sys_title'] = '失敗';
+				$view_data['sys_msg'] = "刪除留言失敗!!!";
+				$view_data['status'] = 'error';
+			}
+			$this->output->set_content_type('application/json')->set_output(json_encode($view_data));
+		}
+	}
+
 	//add like 功能 in 20180407
 	function user_like(){
 		$dataResponse = array();
