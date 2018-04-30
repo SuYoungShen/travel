@@ -94,7 +94,7 @@ $route['delete_UL'] = 'api/delete_UL';//add delete_UL 功能 in 20180409
 $route['test'] = 'travel/test';//20180331測試業面
 
 $route['backstage'] = 'backstage/index';//20180416 add 後台
-$route['place'] = 'backstage/place';//20180424 add 頁面
+$route['place'] = 'backstage/place';//20180424 add 地區頁面
 $route['attractions'] = 'backstage/attractions';//20180424 add 景點資訊頁面
 $route['food'] = 'backstage/food';//20180424 add 美食資訊頁面
 
