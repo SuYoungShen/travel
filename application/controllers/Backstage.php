@@ -25,6 +25,7 @@ class Backstage extends CI_Controller {
 			'breadcrumb_title' => '地區資訊',//麵包穴抬頭
 			'page' => 'place.php'
 		);
+		//新增地區名 ok in 20180430
 		if (!empty($this->input->post("rule")) && $this->input->post('rule') == "New_place") {
 			if (!empty($this->input->post('ch_place')) && !empty($this->input->post('en_place'))) {
 
