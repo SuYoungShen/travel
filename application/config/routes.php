@@ -91,6 +91,7 @@ $route['user_like'] = 'api/user_like';//add like 功能 in 20180407
 $route['Att_and_UL'] = 'api/Att_and_UL';//add Att_and_UL 功能 in 20180409
 $route['delete_UL'] = 'api/delete_UL';//add delete_UL 功能 in 20180409
 $route['delete_place'] = 'api/delete_place';//add delete_place 功能 in 20180430
+$route['do_place'] = 'api/do_place';//編輯、刪除地區用 in 20180506
 
 $route['test'] = 'travel/test';//20180331測試業面
 
