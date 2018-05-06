@@ -140,19 +140,41 @@ async function testSweetalert(id, ch_place, en_place) {
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    confirmButtonText: '更新資料',
-    cancelButtonText: '刪除資料',
-    confirmButtonClass: 'btn btn-primary',
+    confirmButtonText: '<i class="fa fa-refresh"></i>更新資料',//20180506 加入icon
+    cancelButtonText: '<i class="fa fa-times-circle"></i>刪除資料',//20180506 加入icon
+    confirmButtonClass: 'btn btn-success',
     cancelButtonClass: 'btn btn-danger',
     buttonsStyling: false,
     reverseButtons: true
   }).then((result) => {
-    if (result.value) {//更新
+    if (result.value) {//增加編輯地區功能 in 20180506
+      var ed_ch_place = $('#ed_ch_place').val();
+      var ed_en_place = $('#ed_en_place').val();
+
+      $.ajax({
+        url: '../do_place',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          rule: 'Edit',
+          place_id: id,
+          ed_ch_place: ed_ch_place,
+          ed_en_place: ed_en_place
+          }
+      })
+      .done(function(res) {
+        if(res.sys_code != ""){
+          swals(res.sys_title, res.sys_msg, res.status);
+        }
+      })
+      .fail(function(res) {
+        console.log(res);
+      });
 
     }else if(result.dismiss === swal.DismissReason.cancel) {//刪除
 
       $.ajax({
-        url: '../delete_place',
+        url: '../do_place',
         type: 'POST',
         dataType: 'json',
         data: {
