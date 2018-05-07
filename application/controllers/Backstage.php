@@ -21,8 +21,8 @@ class Backstage extends CI_Controller {
 	function place()
   {
 		$view_data = array(
-			'title' => '地區名',
 			'breadcrumb_title' => '地區資訊',//麵包穴抬頭
+			'title' => '地區名',
 			'page' => 'place.php'
 		);
 		//新增地區名 ok in 20180430
@@ -115,10 +115,32 @@ class Backstage extends CI_Controller {
 	function attractions()
   {
 		$view_data = array(
+			'breadcrumb_title' => '地區資訊',//麵包穴抬頭
 			'title' => '景點資訊',
 			'page' => 'attractions.php'
 		);
-    $this->load->view('backstage/layout', $view_data);
+
+		//select 用 in 20180507
+		$select = 'ch_place , en_place';
+		$where = array('1'=> 1);
+		$view_data['place'] = $this->bs_model->get_once_field('place', $where, $select);
+		//select 用 in 20180507
+
+		if (!$this->input->post('place')) {
+			//景點資訊(DataTable) in 20180507
+			$select = 'Name , Opentime, Tel, Add';
+			$where = array('1'=> 1);
+			$view_data['attractions'] = $this->bs_model->get_all($view_data['place'][0]['en_place']);
+			//景點資訊(DataTable) in 20180507
+			$this->load->view('backstage/layout', $view_data);
+		}else {
+			//景點資訊(DataTable) in 20180507
+			$select = 'id, Name , Opentime, Tel, Add';
+			$where = array('1'=> 1);
+			$attractions = $this->bs_model->get_all($this->input->post('place'));
+			//景點資訊(DataTable) in 20180507
+			echo json_encode($attractions);
+		}
   }
 }
 ?>
