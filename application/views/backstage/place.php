@@ -1,3 +1,10 @@
+<!-- add in 20180507 -->
+<style media="screen">
+  .text-muted{
+    color: red !important;
+  }
+</style>
+<!-- add in 20180507 -->
   <div class="breadcrumbs">
     <div class="col-sm-4">
       <div class="page-header float-left">
@@ -32,14 +39,14 @@
                   <input type="hidden" name="rule" value="New_place">
                   <div class="col-12 col-md-9">
                     <input type="text" id="ch_place" name="ch_place" placeholder="請輸入中文地區名" class="form-control">
-                    <small class="form-text text-muted">This is a help text</small>
+                    <small class="form-text text-muted">*必填</small>
                   </div>
                 </div>
                 <div class="row form-group">
                   <div class="col col-md-3"><label for="en_place" class=" form-control-label">英文地區名</label></div>
                   <div class="col-12 col-md-9">
                     <input type="text" id="en_place" name="en_place" placeholder="請輸入英文地區名" class="form-control">
-                    <small class="form-text text-muted">This is a help text</small>
+                    <small class="form-text text-muted">*必填</small>
                   </div>
                 </div>
               </div><!-- card-body -->
