@@ -32,6 +32,7 @@ class Bs_model extends CI_Model {
   //抓取全部資料
   public function get_all($table){
     // $this->db->select('id, Picture, Name, phone');
+    // return $this->db->get_compiled_select($table);//印出字串
     return $this->db->get($table)->result_array();
   }
 
