@@ -169,13 +169,13 @@ async function testSweetalert(id, ch_place, en_place) {
           ed_en_place: ed_en_place
           }
       })
-      .done(function(res) {
-        if(res.sys_code != ""){
-          swals(res.sys_title, res.sys_msg, res.status);
+      .done(function(ResOk) {
+        if(ResOk.sys_code != ""){
+          swals(ResOk.sys_title, ResOk.sys_msg, ResOk.status);
         }
       })
-      .fail(function(res) {
-        console.log(res);
+      .fail(function(ResError) {
+        console.log(ResError);
       });
 
     }else if(result.dismiss === swal.DismissReason.cancel) {//刪除
@@ -189,13 +189,13 @@ async function testSweetalert(id, ch_place, en_place) {
           place_id: id
           }
       })
-      .done(function(res) {
-        if(res.sys_code != ""){
-          swals(res.sys_title, res.sys_msg, res.status);
+      .done(function(ResOk) {
+        if(ResOk.sys_code != ""){
+          swals(ResOk.sys_title, ResOk.sys_msg, ResOk.status);
         }
       })
-      .fail(function(res) {
-        console.log(res);
+      .fail(function(ResError) {
+        console.log(ResError);
       });
     }
   });
