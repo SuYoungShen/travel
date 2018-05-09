@@ -71,35 +71,8 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    var DataTable = $('#bootstrap-data-table').DataTable();
 
-    $('#select').change(function(event) {
-      $.ajax({
-        url: 'attractions',
-        type: 'POST',
-        dataType: 'json',
-        data: {
-          place: $(this).val()
-        }
-      })
-      .done(function(ok) {
-        console.log('ok');
-        DataTable.rows().remove().draw(false);
-        $(ok).each(function(index, val) {
-          var row = DataTable.row.add([//add td 內容 in 20180507
-            val.Name,
-            val.Opentime,
-            val.Tel,
-            val.Add
-          ]).draw(false).nodes();//nodes get tr attr  in 20180507
-          $(row).attr( 'data-id', val.id);//增加被點選tr得屬性  in 20180507
-        });
-      })
-      .fail(function(error) {
-        console.log('error');
-        console.log(error);
-      });
-    });
+  
 
     //add 個別景點資訊 in 20180509
     $('tr').on('click', function (event) {
@@ -123,8 +96,8 @@
           }
         })
         .done(function(ResOk) {
-          console.log("success");
-          console.log(ResOk);
+          // console.log("success");
+          // console.log(ResOk);
           swal({
             title: "景點-"+ResOk.one_att.Name,
             imageUrl: ResOk.one_att.Picture,
