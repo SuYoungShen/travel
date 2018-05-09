@@ -95,10 +95,12 @@ $route['delete_place'] = 'api/delete_place';//add delete_place 功能 in 2018043
 $route['test'] = 'travel/test';//20180331測試業面
 
 $route['backstage'] = 'backstage/index';//20180416 add 後台
-$route['do_place'] = 'Api_backstage/do_place';//編輯、刪除地區用 in 20180506
 $route['place'] = 'backstage/place';//20180424 add 地區頁面
 $route['attractions'] = 'backstage/attractions';//20180424 add 景點資訊頁面
 $route['food'] = 'backstage/food';//20180424 add 美食資訊頁面
+
+$route['do_place'] = 'Api_backstage/do_place';//編輯、刪除地區用 in 20180506
+$route['do_attractions'] = 'Api_backstage/do_attractions';//編輯、刪除景點資訊用 in 20180509
 
 $route['food_place'] = 'travel/food_place';
 
