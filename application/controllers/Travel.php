@@ -31,17 +31,15 @@ class Travel extends CI_Controller {
 	}
 
 	function attractions_place(){
-		$places = array();
 		$place = $this->travel_model->get_all('place');
 
 		$this->output->set_content_type('application/json')->set_output(json_encode($place));
 	}
 
 	function food_place(){
-		$place = array(
-										// "pingtung" => "屏東",
-										"kaohsiung" => "高雄"
-									);
+
+		$place = $this->travel_model->get_all('place');
+
 		$this->output->set_content_type('application/json')->set_output(json_encode($place));
 	}
 
@@ -86,20 +84,12 @@ class Travel extends CI_Controller {
 				$this->output->set_content_type('application/json')->set_output(json_encode($data));
 
 			}
-		}else if(strpos(uri_string(), "attractions")){//網址上為景點
-			$url = file_get_contents("http://i-pingtung.com/OpenData/Attractions?start=0&limit=2000");
-			$data = json_decode($url);
-		 	return json_encode($data);
-		}else if(strpos(uri_string(), "food")){//網址上為食物
-			$url = file_get_contents("http://i-pingtung.com/OpenData/Consume?start=0&limit=1000");
-			$data = json_decode($url);
-			return json_encode($data);
 		}
 	}
 
 	function kaohsiung(){
 
- 		$base = base_url().uri_string();
+		$base = base_url().uri_string();
 
 		$place = $this->input->post('place');
 		$travel = $this->input->post('travel');
@@ -163,16 +153,16 @@ class Travel extends CI_Controller {
 
 							foreach ($data->result->records as $key => $value) {
 								$datas = array(
-									'Name' => $value->Name,
-									'Picture' => $value->Picture1,
-									'Description'=> $value->Description,
-									'Opentime' => $value->Opentime,
-									'Tel' => $value->Tel,
-									'Add' => $value->Add,
-									'Driving' => $value->Travellinginfo,
-									'Py' => $value->Py,
-									'Px' => $value->Px,
-									'Update_Date' => $Today_Date
+								'Name' => $value->Name,
+								'Picture' => $value->Picture1,
+								'Description'=> $value->Description,
+								'Opentime' => $value->Opentime,
+								'Tel' => $value->Tel,
+								'Add' => $value->Add,
+								'Driving' => $value->Travellinginfo,
+								'Py' => $value->Py,
+								'Px' => $value->Px,
+								'Update_Date' => $Today_Date
 								);
 								$where = "id =".'"'.$id[$key]['id'].'"';
 
@@ -186,10 +176,10 @@ class Travel extends CI_Controller {
 								$datas["title"] = "高雄景點";
 
 								$this->output->set_content_type('application/json')->set_output(json_encode($datas));
-								}else {
-									$res['sys_code'] = 404;
-									$res['sys_msg'] = "更新資料庫失敗";
-									$this->output->set_content_type('application/json')->set_output(json_encode($res));
+							}else {
+								$res['sys_code'] = 404;
+								$res['sys_msg'] = "更新資料庫失敗";
+								$this->output->set_content_type('application/json')->set_output(json_encode($res));
 							}
 						}else {//END 比對時間
 
@@ -229,17 +219,17 @@ class Travel extends CI_Controller {
 
 						foreach ($data->result->records as $key => $value) {
 							$datas = array(
-								'id' => uniqid(),
-								'Picture' => $value->Picture1,
-								'name' => $value->Name,
-								'Description'=> $value->Description,
-								'Opentime' => $value->Opentime,
-								'Tel' => $value->Tel,
-								'Add' => $value->Add,
-								'Type' => 1,
-								'Py' => $value->Py,
-								'Px' => $value->Px,
-								'Update_Date' => $Today_Date
+							'id' => uniqid(),
+							'Picture' => $value->Picture1,
+							'name' => $value->Name,
+							'Description'=> $value->Description,
+							'Opentime' => $value->Opentime,
+							'Tel' => $value->Tel,
+							'Add' => $value->Add,
+							'Type' => 1,
+							'Py' => $value->Py,
+							'Px' => $value->Px,
+							'Update_Date' => $Today_Date
 							);
 							$true = $this->travel_model->insert($place, $datas);
 						}//end foreach
@@ -262,107 +252,63 @@ class Travel extends CI_Controller {
 						$Update_Date = $this->travel_model->get_date($place);
 
 						//判斷今天日期有無大於table日期，有表示要做更新
-						if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						// if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						//
+						// 	$id = $this->travel_model->get_id($place);
+						//
+						// 	foreach ($data->result->records as $key => $value) {
+						// 		$datas = array(
+						// 		'Name' => $value->Name,
+						// 		'Picture' => $value->Picture1,
+						// 		'Description'=> $value->Description,
+						// 		'Opentime' => $value->Opentime,
+						// 		'Tel' => $value->Tel,
+						// 		'Add' => $value->Add,
+						// 		'Driving' => $value->Travellinginfo,
+						// 		'Py' => $value->Py,
+						// 		'Px' => $value->Px,
+						// 		'Update_Date' => $Today_Date
+						// 		);
+						// 		$where = "id =".'"'.$id[$key]['id'].'"';
+						//
+						// 		$true = $this->travel_model->update($place, $datas, $where);
+						// 	}
+						// 	if($true){
+						//
+						// 		$where = "Type = 1";//0=景點；1=美食
+						// 		$datas = $this->travel_model->get_once_all($place, $where);
+						// 		$datas["total"] = count($datas);
+						// 		$datas["title"] = "高雄美食";
+						//
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// 	}else {
+						// 		$res['sys_code'] = 404;
+						// 		$res['sys_msg'] = "更新資料庫失敗";
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						// 	}
+						// }else {//END 比對時間
 
-							$id = $this->travel_model->get_id($place);
+							$where = "Type = 1";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "高雄美食";
 
-							foreach ($data->result->records as $key => $value) {
-								$datas = array(
-									'Name' => $value->Name,
-									'Picture' => $value->Picture1,
-									'Description'=> $value->Description,
-									'Opentime' => $value->Opentime,
-									'Tel' => $value->Tel,
-									'Add' => $value->Add,
-									'Driving' => $value->Travellinginfo,
-									'Py' => $value->Py,
-									'Px' => $value->Px,
-									'Update_Date' => $Today_Date
-									);
-									$where = "id =".'"'.$id[$key]['id'].'"';
-
-									$true = $this->travel_model->update($place, $datas, $where);
-								}
-								if($true){
-
-									$where = "Type = 0";//0=景點；1=美食
-									$datas = $this->travel_model->get_once_all($place, $where);
-									$datas["total"] = count($datas);
-									$datas["title"] = "高雄景點";
-
-									$this->output->set_content_type('application/json')->set_output(json_encode($datas));
-								}else {
-									$res['sys_code'] = 404;
-									$res['sys_msg'] = "更新資料庫失敗";
-									$this->output->set_content_type('application/json')->set_output(json_encode($res));
-								}
-							}else {//END 比對時間
-
-								$where = "Type = 1";//0=景點；1=美食
-								$datas = $this->travel_model->get_once_all($place, $where);
-								$datas["total"] = count($datas);
-								$datas["title"] = "高雄景點";
-
-								$this->output->set_content_type('application/json')->set_output(json_encode($datas));
-							}
-							//20180323
-						}
-					}else{//END $url
-						//當api掛掉時，抓取資料庫資料
-						$where = "Type = 1";//0=景點；1=美食
-						$datas = $this->travel_model->get_once_all($place, $where);
-						$datas["total"] = count($datas);
-						$datas["title"] = "高雄景點";
-
-						$this->output->set_content_type('application/json')->set_output(json_encode($datas));
-
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// }
+						//20180323
 					}
-				}//food
+				}else{//END $url
+					//當api掛掉時，抓取資料庫資料
+					$where = "Type = 1";//0=景點；1=美食
+					$datas = $this->travel_model->get_once_all($place, $where);
+					$datas["total"] = count($datas);
+					$datas["title"] = "高雄美食";
 
-				// $this->output->set_content_type('application/json')->set_output(json_encode($datas));
-
-			}else if($base == "http://104.199.199.61/kaohsiung/attractions"){//用來看景點資料
-
-			$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=92290ee5-6e61-456f-80c0-249eae2fcc97");
-			$data = json_decode($url);
-
-			$Total = count($data->result->records);//總比數
-
-			$this->output->set_content_type('application/json')->set_output(json_encode($data));
-
-		}else if($base == "http://104.199.199.61/kaohsiung/food"){
-
-			$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
-			$data = json_decode($url);
-			$this->output->set_content_type('application/json')->set_output(json_encode($data));
-		}else if($base == "http://104.199.199.61/kaohsiung/test"){
-			$place = "kaohsiung";
-			$true = $this->travel_model->get_all($place);
-
-			$data = new stdClass();//陣列轉換class後存自此變數;@禁止顯示錯誤
-			$data->Total = $this->travel_model->get_num($place);
-			$data->title = "高雄景點";
-
-			foreach ($true as $key => $value) {
-				if ($key === 0) {
-					$data->Id01 = $value['id'];
-					$data->Img01 = $value['Picture'];
-					$data->Name01 = $value['Name'];
-					$data->OpenTime01 = $value['Opentime'];
-					$data->Tel01 = $value['Tel'];
-					$data->FullAddress01 = $value['Add'];
-				}else {
-					$data->Id[$key] = $value['id'];
-					@$data->result->records[$key]->Picture1 = $value['Picture'];
-					@$data->result->records[$key]->Name = $value['Name'];
-					@$data->result->records[$key]->Opentime = $value['Opentime'];
-					@$data->result->records[$key]->Tel = $value['Tel'];
-					@$data->result->records[$key]->Add = $value['Add'];
+					$this->output->set_content_type('application/json')->set_output(json_encode($datas));
 				}
-			}
-			$this->output->set_content_type('application/json')->set_output(json_encode($data));
-		}
-	}
+			}//food
+		}//$_POST
+	}//Function
 
 	//有更新過 in 20180409
 	function tainan(){//沒照片...
@@ -385,7 +331,7 @@ class Travel extends CI_Controller {
 					//20180323
 					$Today_Date = date('Y-m-d');//今天日期
 
-					$where = "type = 0";//景點 in 20180409
+					$where = "Type = 0";//景點 in 20180409
 					if($this->travel_model->get_once($place, $where) === null){//判斷資料庫有無資料
 
 						foreach ($data as $key => $value) {
@@ -405,7 +351,7 @@ class Travel extends CI_Controller {
 						}//end foreach
 
 						if($true){
-							$where = "type = 0";//0=景點；1=美食 in 20180409
+							$where = "Type = 0";//0=景點；1=美食 in 20180409
 							$datas = $this->travel_model->get_once_all($place, $where);
 							$datas["total"] = count($datas);
 							$datas["title"] = "台南景點";
@@ -419,57 +365,57 @@ class Travel extends CI_Controller {
 
 					}else {//資料表有資料
 
-						$Update_Date = $this->travel_model->get_date($place);
+						// $Update_Date = $this->travel_model->get_date($place);
+						//
+						// //判斷今天日期有無大於table日期，有表示要做更新
+						// if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						//
+						// 	$id = $this->travel_model->get_id($place);
+						//
+						// 	foreach ($data as $key => $value) {
+						// 		$datas = array(
+						// 			'Name' => $value->name,
+						// 			'Description'=> $value->introduction,
+						// 			'Opentime' => $value->opentime,
+						// 			'Tel' => $value->tel,
+						// 			'Add' => $value->address,
+						// 			'Driving' => "",
+						// 			'Py' => $value->lat,
+						// 			'Px' => $value->long,
+						// 			'Update_Date' => $Today_Date
+						// 		);
+						//
+						// 		$where = "id =".'"'.$id[$key]['id'].'"';
+						//
+						// 		$true = $this->travel_model->update($place, $datas, $where);
+						// 	}
+						// 	if($true){
+						//
+						// 		$where = "Type = 0";//0=景點；1=美食
+						// 		$datas = $this->travel_model->get_once_all($place, $where);
+						// 		$datas["total"] = count($datas);
+						// 		$datas["title"] = "台南景點";
+						//
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// 		}else {
+						// 			$res['sys_code'] = 404;
+						// 			$res['sys_msg'] = "更新資料庫失敗";
+						// 			$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						// 	}
+						// }else {//END 比對時間
 
-						//判斷今天日期有無大於table日期，有表示要做更新
-						if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
-
-							$id = $this->travel_model->get_id($place);
-
-							foreach ($data as $key => $value) {
-								$datas = array(
-									'id' => uniqid(),
-									'Name' => $value->name,
-									'Description'=> $value->introduction,
-									'Opentime' => $value->opentime,
-									'Tel' => $value->tel,
-									'Add' => $value->address,
-									'Driving' => "",
-									'Py' => $value->lat,
-									'Px' => $value->long,
-									'Update_Date' => $Today_Date
-								);
-								$where = "id =".'"'.$id[$key]['id'].'"'."&& type=0";
-
-								$true = $this->travel_model->update($place, $datas, $where);
-							}
-							if($true){
-
-								$where = "type = 0";//0=景點；1=美食
-								$datas = $this->travel_model->get_once_all($place, $where);
-								$datas["total"] = count($datas);
-								$datas["title"] = "台南景點";
-
-								$this->output->set_content_type('application/json')->set_output(json_encode($datas));
-								}else {
-									$res['sys_code'] = 404;
-									$res['sys_msg'] = "更新資料庫失敗";
-									$this->output->set_content_type('application/json')->set_output(json_encode($res));
-							}
-						}else {//END 比對時間
-
-							$where = "type = 0";//0=景點；1=美食
+							$where = "Type = 0";//0=景點；1=美食
 							$datas = $this->travel_model->get_once_all($place, $where);
 							$datas["total"] = count($datas);
 							$datas["title"] = "台南景點";
 
 							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
-						}
+						// }
 						//20180323
 					}
 				}else{//END $url
 					//當api掛掉時，抓取資料庫資料
-					$where = "type = 0";//0=景點；1=美食
+					$where = "Type = 0";//0=景點；1=美食
 					$datas = $this->travel_model->get_once_all($place, $where);
 					$datas["total"] = count($datas);
 					$datas["title"] = "台南景點";
@@ -479,21 +425,574 @@ class Travel extends CI_Controller {
 				}
 
 			}else if(isset($travel) && !empty($travel) && $travel == "food"){
-				$url = file_get_contents("https://data.kcg.gov.tw/api/action/datastore_search?resource_id=ed80314f-e329-4817-bfbb-2d6bc772659e");
-				$data = json_decode($url);
+				$url = file_get_contents("https://www.twtainan.net/opendata/consumeApi?category=0&township=0&type=JSON");
 
-				$data->title = "台南美食";
+				//Insert 以下程式 in 20180409
+				if ($url) {//判斷是否抓取成功
+					$data = json_decode($url);
 
-				$data->Img01 = $data->result->records[0]->Picture1;
-				$data->Name01 = $data->result->records[0]->Name;
-				$data->OpenTime01 = $data->result->records[0]->Opentime;
-				$data->Tel01 = $data->result->records[0]->Tel;
-				$data->FullAddress01 = $data->result->records[0]->Add;
-				// echo "<pre>";
-				// var_dump($data);
-				// echo "</pre>";
-				$this->output->set_content_type('application/json')->set_output(json_encode($data));
-			}
+					date_default_timezone_set("Asia/Taipei");//設定時區
+
+					$Today_Date = date('Y-m-d');//今天日期
+
+					$where = "Type = 1";//景點
+					if($this->travel_model->get_once($place, $where) === null){//判斷資料庫有無資料
+
+						foreach ($data as $key => $value) {
+							$datas = array(
+								'id' => uniqid(),
+								'Picture' => "",
+								'Name' => $value->name,
+								'Description'=> $value->introduction,
+								'Opentime' => $value->opentime,
+								'Tel' => $value->tel,
+								'Add' => $value->address,
+								'Driving' => "",
+								'Type' => 1,
+								'Py' => $value->lat,
+								'Px' => $value->long,
+								'Update_Date' => $Today_Date
+							);
+							$true = $this->travel_model->insert($place, $datas);
+						}//end foreach
+						// $true = true;
+
+						if($true){
+							$where = "Type = 1";//0=景點；1=美食 in 20180409
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "台南美食";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						}else {
+							$res['sys_code'] = 404;
+							$res['sys_msg'] = "新增資料庫失敗";
+							$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						}
+
+					}else {//資料表有資料
+
+						// $Update_Date = $this->travel_model->get_date($place);
+						//
+						// //判斷今天日期有無大於table日期，有表示要做更新
+						// if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						//
+						// 	$id = $this->travel_model->get_id($place);
+						//
+						// 	foreach ($data as $key => $value) {
+						// 		$datas = array(
+						// 			'Name' => $value->name,
+						// 			'Description'=> $value->introduction,
+						// 			'Opentime' => $value->opentime,
+						// 			'Tel' => $value->tel,
+						// 			'Add' => $value->address,
+						// 			'Driving' => "",
+						// 			'Py' => $value->lat,
+						// 			'Px' => $value->long,
+						// 			'Update_Date' => $Today_Date
+						// 		);
+						// 		$where = "id =".'"'.$id[$key]['id'].'"'."&& Type = 1";
+						//
+						// 		$true = $this->travel_model->update($place, $datas, $where);
+						// 	}
+						// 	if($true){
+						//
+						// 		$where = "Type = 1";//0=景點；1=美食
+						// 		$datas = $this->travel_model->get_once_all($place, $where);
+						// 		$datas["total"] = count($datas);
+						// 		$datas["title"] = "台南景點";
+						//
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// 		}else {
+						// 			$res['sys_code'] = 404;
+						// 			$res['sys_msg'] = "更新資料庫失敗";
+						// 			$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						// 	}
+						// }else {//END 比對時間
+
+							$where = "Type = 1";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "台南美食";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// }
+						//20180323
+					}
+				}else{//END $url
+					//當api掛掉時，抓取資料庫資料
+					$where = "Type = 1";//0=景點；1=美食
+					$datas = $this->travel_model->get_once_all($place, $where);
+					$datas["total"] = count($datas);
+					$datas["title"] = "台南美食";
+
+					$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+
+				}
+			}//End Food
+		}
+	}
+
+	//新增以下程式 in 20180410 嘉義縣
+	function chiayi(){
+		$this->load->helper('text');
+
+		$base = base_url().uri_string();
+		if (isset($_POST["place"]) && !empty($_POST["place"]) && $_POST["place"] == "chiayi") {
+
+			$place = $_POST["place"];
+			$travel = $_POST["travel"];
+
+			if (isset($travel) && !empty($travel) && $travel == "attractions") {
+
+				$url = file_get_contents(base_url('assets/file/chiayi_att.json'));
+				if ($url) {//判斷是否抓取成功
+					$data = json_decode($url);
+
+					date_default_timezone_set("Asia/Taipei");//設定時區
+
+					$Today_Date = date('Y-m-d');//今天日期
+
+					$where = "Type = 0";//景點
+					if($this->travel_model->get_once($place, $where) === null){//判斷資料庫有無資料
+
+						foreach ($data as $key => $value) {
+							$value->poi_bannerPicURL = str_replace("../../", "http://opendata.dazone.tw/", $value->poi_bannerPicURL);
+
+							$datas = array(
+								'id' => uniqid(),
+								'Picture' => $value->poi_bannerPicURL,
+								'Name' => $value->poi_name,
+								'Description'=> $value->poi_fulldesc,
+								'Opentime' => $value->poi_openhour,
+								'Tel' => $value->poi_phone,
+								'Add' => empty($value->poi_address)?$value->poi_publicTraffic:$value->poi_address,
+								'Driving' => empty($value->poi_trafficInfo)?$value->poi_driveInfo:$value->poi_trafficInfo,
+								'Py' => $value->poi_latitude,
+								'Px' => $value->poi_longitude,
+								'Update_Date' => $Today_Date
+							);
+							$true = $this->travel_model->insert($place, $datas);
+						}//end foreach
+
+						if($true){
+							$where = "Type = 0";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義縣景點";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));//
+						}else {
+							$res['sys_code'] = 404;
+							$res['sys_msg'] = "新增資料庫失敗";
+							$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						}
+
+					}else {//資料表有資料
+
+						$Update_Date = $this->travel_model->get_date($place);
+
+						//判斷今天日期有無大於table日期，有表示要做更新
+						// if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						//
+						// 	$id = $this->travel_model->get_id($place);
+						//
+						// 	foreach ($data as $key => $value) {
+						// 		$value->poi_bannerPicURL = str_replace("../../", "http://opendata.dazone.tw/", $value->poi_bannerPicURL);
+						//
+						// 		$datas = array(
+						// 			'Picture' => $value->poi_bannerPicURL,
+						// 			'Name' => $value->poi_name,
+						// 			'Description'=> $value->poi_fulldesc,
+						// 			'Opentime' => $value->poi_openhour,
+						// 			'Tel' => $value->poi_phone,
+						// 			'Add' => empty($value->poi_address)?$value->poi_publicTraffic:$value->poi_address,
+						// 			'Driving' => empty($value->poi_trafficInfo)?$value->poi_driveInfo:$value->poi_trafficInfo,
+						// 			'Py' => $value->poi_latitude,
+						// 			'Px' => $value->poi_longitude,
+						// 			'Update_Date' => $Today_Date
+						// 		);
+						// 		$where = "id =".'"'.$id[$key]['id'].'"';
+						//
+						// 		$true = $this->travel_model->update($place, $datas, $where);
+						// 	}
+						// 	if($true){
+						//
+						// 		$where = "Type = 0";//0=景點；1=美食
+						// 		$datas = $this->travel_model->get_once_all($place, $where);
+						// 		$datas["total"] = count($datas);
+						// 		$datas["title"] = "嘉義縣景點";
+						//
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// 		}else {
+						// 			$res['sys_code'] = 404;
+						// 			$res['sys_msg'] = "更新資料庫失敗";
+						// 			$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						// 	}
+						// }else {//END 比對時間
+
+							$where = "Type = 0";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義縣景點";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// }
+					}
+				}else{//END $url
+					//當api掛掉時，抓取資料庫資料
+					$where = "Type = 0";//0=景點；1=美食
+					$datas = $this->travel_model->get_once_all($place, $where);
+					$datas["total"] = count($datas);
+					$datas["title"] = "嘉義縣景點";
+
+					$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+
+				}
+
+			}else if(isset($travel) && !empty($travel) && $travel == "food"){
+				$url = file_get_contents(base_url("assets/file/chiayi_food.json"));
+
+				if ($url) {//判斷是否抓取成功
+					$data = json_decode($url);
+
+					date_default_timezone_set("Asia/Taipei");//設定時區
+
+					$Today_Date = date('Y-m-d');//今天日期
+
+					$where = "Type = 1";//景點
+					if($this->travel_model->get_once($place, $where) === null){//判斷資料庫有無資料
+
+						foreach ($data as $key => $value) {
+
+							$value->shopBannerImgURL = str_replace("../../", "http://opendata.dazone.tw/", $value->shopBannerImgURL);
+							$datas = array(
+								'id' => uniqid(),
+								'Picture' => $value->shopBannerImgURL,
+								'Name' => $value->shop_name,
+								'Description'=> "",
+								'Opentime' => "",
+								'Tel' => $value->shop_phone,
+								'Add' => $value->shop_address,
+								'Driving' => "",
+								'Type' => 1,
+								'Py' => $value->shop_latitude,
+								'Px' => $value->shop_longitude,
+								'Update_Date' => $Today_Date
+							);
+
+							$true = $this->travel_model->insert($place, $datas);
+						}//end foreach
+
+						if($true){
+							$where = "Type = 1";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義縣美食";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						}else {
+							$res['sys_code'] = 404;
+							$res['sys_msg'] = "新增資料庫失敗";
+							$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						}
+
+					}else {//資料表有資料
+
+						// $Update_Date = $this->travel_model->get_date($place);
+						//
+						// //判斷今天日期有無大於table日期，有表示要做更新
+						// if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						//
+						// 	$id = $this->travel_model->get_id($place);
+						//
+						// 	foreach ($data as $key => $value) {
+						// 		$datas = array(
+						// 			'Name' => $value->name,
+						// 			'Description'=> $value->introduction,
+						// 			'Opentime' => $value->opentime,
+						// 			'Tel' => $value->tel,
+						// 			'Add' => $value->address,
+						// 			'Driving' => "",
+						// 			'Py' => $value->lat,
+						// 			'Px' => $value->long,
+						// 			'Update_Date' => $Today_Date
+						// 		);
+						// 		$where = "id =".'"'.$id[$key]['id'].'"';
+						//
+						// 		$true = $this->travel_model->update($place, $datas, $where);
+						// 	}
+						// 	if($true){
+						//
+						// 		$where = "Type = 1";//0=景點；1=美食
+						// 		$datas = $this->travel_model->get_once_all($place, $where);
+						// 		$datas["total"] = count($datas);
+						// 		$datas["title"] = "嘉義縣美食";
+						//
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// 		}else {
+						// 			$res['sys_code'] = 404;
+						// 			$res['sys_msg'] = "更新資料庫失敗";
+						// 			$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						// 	}
+						// }else {//END 比對時間
+
+							$where = "Type = 1";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義縣美食";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// }
+					}
+				}else{//END $url
+					//當api掛掉時，抓取資料庫資料
+					$where = "Type = 1";//0=景點；1=美食
+					$datas = $this->travel_model->get_once_all($place, $where);
+					$datas["total"] = count($datas);
+					$datas["title"] = "嘉義縣美食";
+
+					$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+
+				}
+			}//End Food
+		}//$_POST[""]
+	}
+
+	//新增以下程式 in 20180410 嘉義市
+	function chiayis(){
+		$this->load->helper('text');
+
+		$base = base_url().uri_string();
+		if (isset($_POST["place"]) && !empty($_POST["place"]) && $_POST["place"] == "chiayis") {
+
+			$place = $_POST["place"];
+			$travel = $_POST["travel"];
+
+			if (isset($travel) && !empty($travel) && $travel == "attractions") {
+
+				$url = simplexml_load_file('http://travel_old.chiayi.gov.tw/xml/C1_376600000A.xml');
+				$count = count($url->Infos->Info);//計算總比數
+				$data = array();
+				for ($i=0; $i < $count; $i++) {
+					foreach($url->Infos->Info[$i]->attributes() as $key => $state)
+					{
+						$data[$key][$i] = $state;
+					}
+				}
+
+				if ($url) {//判斷是否抓取成功
+
+					date_default_timezone_set("Asia/Taipei");//設定時區
+
+					$Today_Date = date('Y-m-d');//今天日期
+
+					$where = "Type = 0";//景點
+					if($this->travel_model->get_once($place, $where) === null){//判斷資料庫有無資料
+
+						for ($i=0; $i < $count; $i++) {
+							$datas = array(
+								'id' => uniqid(),
+								'Picture' => "",
+								'Name' => $data["Name"][$i],
+								'Description'=> $data["Toldescribe"][$i],
+								'Opentime' =>  $data["Opentime"][$i],
+								'Tel' =>  $data["Tel"][$i],
+								'Add' => $data["Add"][$i],
+								'Driving' => "",
+								'Py' => $data["Py"][$i],
+								'Px' => $data["Px"][$i],
+								'Update_Date' => $Today_Date
+							);
+							$true = $this->travel_model->insert($place, $datas);
+						}//End For
+
+						if($true){
+							$where = "Type = 0";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義市景點";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));//
+						}else {
+							$res['sys_code'] = 404;
+							$res['sys_msg'] = "新增資料庫失敗";
+							$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						}
+
+					}else {//資料表有資料
+
+						// $Update_Date = $this->travel_model->get_date($place);
+
+						//判斷今天日期有無大於table日期，有表示要做更新
+						// if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						//
+						// 	$id = $this->travel_model->get_id($place);
+						//
+						// 	for ($i=0; $i < $count; $i++) {
+						// 		$datas = array(
+						// 			'Picture' => "",
+						// 			'Name' => $data["Name"][$i],
+						// 			'Description'=> $data["Toldescribe"][$i],
+						// 			'Opentime' =>  $data["Opentime"][$i],
+						// 			'Tel' =>  $data["Tel"][$i],
+						// 			'Add' => $data["Add"][$i],
+						// 			'Driving' => "",
+						// 			'Py' => $data["Py"][$i],
+						// 			'Px' => $data["Px"][$i],
+						// 			'Update_Date' => $Today_Date
+						// 		);
+						// 		$where = "id =".'"'.$id[$i]['id'].'"';
+						// 		$true = $this->travel_model->update($place, $datas, $where);
+						// 	}//End For
+						//
+						// 	if($true){
+						//
+						// 		$where = "Type = 0";//0=景點；1=美食
+						// 		$datas = $this->travel_model->get_once_all($place, $where);
+						// 		$datas["total"] = count($datas);
+						// 		$datas["title"] = "嘉義市景點";
+						//
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// 		}else {
+						// 			$res['sys_code'] = 404;
+						// 			$res['sys_msg'] = "更新資料庫失敗";
+						// 			$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						// 	}
+						// }else {//END 比對時間
+
+							$where = "Type = 0";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義市景點";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// }
+					}
+				}else{//END $url
+					//當api掛掉時，抓取資料庫資料
+					$where = "Type = 0";//0=景點；1=美食
+					$datas = $this->travel_model->get_once_all($place, $where);
+					$datas["total"] = count($datas);
+					$datas["title"] = "嘉義市景點";
+
+					$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+
+				}
+
+			}else if(isset($travel) && !empty($travel) && $travel == "food"){//add in 20180410
+
+				$url = simplexml_load_file('http://travel_old.chiayi.gov.tw/xml/C3_376600000A.xml');
+				$count = count($url->Infos->Info);//計算總比數
+				$data = array();
+				for ($i=0; $i < $count; $i++) {
+					foreach($url->Infos->Info[$i]->attributes() as $key => $state)
+					{
+						$data[$key][$i] = $state;
+					}
+				}
+
+				if ($url) {//判斷是否抓取成功
+
+					date_default_timezone_set("Asia/Taipei");//設定時區
+
+					$Today_Date = date('Y-m-d');//今天日期
+
+					$where = "Type = 1";//景點
+					if($this->travel_model->get_once($place, $where) === null){//判斷資料庫有無資料
+
+						for ($i=0; $i < $count; $i++) {
+							$datas = array(
+								'id' => uniqid(),
+								'Picture' => "",
+								'Name' => $data["Name"][$i],
+								'Description'=> $data["Description"][$i],
+								'Opentime' =>  $data["Opentime"][$i],
+								'Tel' =>  $data["Tel"][$i],
+								'Add' => $data["Add"][$i],
+								'Driving' => "",
+								'Type' => 1,
+								'Py' => $data["Py"][$i],
+								'Px' => $data["Px"][$i],
+								'Update_Date' => $Today_Date
+							);
+							$true = $this->travel_model->insert($place, $datas);
+						}//End For
+
+						if($true){
+							$where = "Type = 1";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義市美食";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));//
+						}else {
+							$res['sys_code'] = 404;
+							$res['sys_msg'] = "新增資料庫失敗";
+							$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						}
+
+					}else {//資料表有資料
+
+						// $Update_Date = $this->travel_model->get_date($place);
+						//
+						// //判斷今天日期有無大於table日期，有表示要做更新
+						// if(strtotime($Today_Date) > strtotime($Update_Date->Update_Date)){
+						//
+						// 	$id = $this->travel_model->get_id($place);
+						//
+						// 	for ($i=0; $i < $count; $i++) {
+						// 		$datas = array(
+						// 		'Picture' => "",
+						// 		'Name' => $data["Name"][$i],
+						// 		'Description'=> $data["Description"][$i],
+						// 		'Opentime' =>  $data["Opentime"][$i],
+						// 		'Tel' =>  $data["Tel"][$i],
+						// 		'Add' => $data["Add"][$i],
+						// 		'Driving' => "",
+						// 		'Py' => $data["Py"][$i],
+						// 		'Px' => $data["Px"][$i],
+						// 		'Update_Date' => $Today_Date
+						// 		);
+						// 		$where = "id =".'"'.$id[$i]['id'].'"';
+						// 		$true = $this->travel_model->update($place, $datas, $where);
+						// 	}//End For
+						//
+						// 	if($true){
+						//
+						// 		$where = "Type = 1";//0=景點；1=美食
+						// 		$datas = $this->travel_model->get_once_all($place, $where);
+						// 		$datas["total"] = count($datas);
+						// 		$datas["title"] = "嘉義市美食";
+						//
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// 	}else {
+						// 		$res['sys_code'] = 404;
+						// 		$res['sys_msg'] = "更新資料庫失敗";
+						// 		$this->output->set_content_type('application/json')->set_output(json_encode($res));
+						// 	}
+						// }else {//END 比對時間
+
+							$where = "Type = 1";//0=景點；1=美食
+							$datas = $this->travel_model->get_once_all($place, $where);
+							$datas["total"] = count($datas);
+							$datas["title"] = "嘉義市美食";
+
+							$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+						// }
+
+					}
+				}else{//END $url
+					//當api掛掉時，抓取資料庫資料
+					$where = "Type = 1";//0=景點；1=美食
+					$datas = $this->travel_model->get_once_all($place, $where);
+					$datas["total"] = count($datas);
+					$datas["title"] = "嘉義市景點";
+
+					$this->output->set_content_type('application/json')->set_output(json_encode($datas));
+
+				}
+			}//End Food
 		}else if($base == "http://104.199.199.61/tainan/attractions"){//word_censor用來檢查看看網址有無此文字
 
 			$url = file_get_contents("https://www.twtainan.net/opendata/attractionapi?category=0&township=0&type=JSON");
@@ -513,8 +1012,30 @@ class Travel extends CI_Controller {
 			$data = json_decode($url);
 			$this->output->set_content_type('application/json')->set_output(json_encode($data));
 
+		}else if($base == base_url('chiayis/test')){
+
+			$url = simplexml_load_file('http://travel_old.chiayi.gov.tw/xml/C3_376600000A.xml');
+			$count = count($url->Infos->Info);//計算總比數
+			$data = array();
+
+
+				for ($i=0; $i < $count; $i++) {
+					foreach($url->Infos->Info[$i]->attributes() as $key => $state)
+					{
+						$data[$key][$i] = $state;
+					}
+				}
+
+			echo "<pre>";
+			var_dump($data);
+			echo "</pre>";
+
+			// $this->output->set_content_type('application/json')->set_output(json_encode($data));
+
 		}
 	}
+
+
 
 	function alltaiwan(){
 
@@ -662,6 +1183,69 @@ class Travel extends CI_Controller {
  				$marker['position'] = $GPS;
  				$this->googlemaps->add_marker($marker);
  				$view_data['map'] = $this->googlemaps->create_map();
+			}else if(isset($place) && !empty($place) && $place == "chiayis"){//Add in 20180410
+				$view_data["place"] = "嘉義市";
+ 				$view_data["travel"] = "景點";
+
+				$where = array(
+					'id' => $i,
+					'type' => 0
+				);
+				$datas = $this->travel_model->get_once($place, $where);
+
+				$view_data["Id"] = $i;//景點ID
+				$view_data["Name"] = $datas->Name;//名稱
+				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
+				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
+				$view_data["Tel"] = $this->noempty("電話：", $datas->Tel);//電話
+				$view_data["FullAddress"] = $this->noempty("地址：", $datas->Add);//地址
+				$PyPx = $datas->Py.",".$datas->Px;//Py經度Px緯度
+				$view_data["Driving"] = $this->noempty("如何到達：", $datas->Driving);//如何到達
+				$view_data["Images"] = $datas->Picture;//照片
+				$view_data["Count"] = count($datas->Picture);
+
+				$GPS = $this->noempty("", $PyPx);//GPS經緯度
+
+				$config['center'] = $GPS;
+				$config['zoom'] = '16';
+				$this->googlemaps->initialize($config);
+
+				$marker = array();
+				$marker['position'] = $GPS;
+				$this->googlemaps->add_marker($marker);
+				$view_data['map'] = $this->googlemaps->create_map();
+			}else if(isset($place) && !empty($place) && $place == "tainan"){
+				$view_data["place"] = "台南";
+ 				$view_data["travel"] = "景點";
+
+				$where = array(
+					'id' => $i,
+					'type' => 0
+				);
+				$datas = $this->travel_model->get_once($place, $where);
+
+				$view_data["Id"] = $i;//景點ID
+				$view_data["Name"] = $datas->Name;//名稱
+				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
+				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
+				$view_data["Tel"] = $this->noempty("電話：", $datas->Tel);//電話
+				$view_data["FullAddress"] = $this->noempty("地址：", $datas->Add);//地址
+				$PyPx = $datas->Py.",".$datas->Px;//Py經度Px緯度
+				$view_data["Driving"] = $this->noempty("如何到達：", "");//如何到達
+
+ 				$view_data["Images"] = " ";//照片
+ 				$view_data["Count"] = 1;
+
+ 				$GPS = $this->noempty("", $PyPx);//GPS經緯度
+
+ 				$config['center'] = $GPS;
+ 				$config['zoom'] = '16';
+ 				$this->googlemaps->initialize($config);
+
+ 				$marker = array();
+ 				$marker['position'] = $GPS;
+ 				$this->googlemaps->add_marker($marker);
+ 				$view_data['map'] = $this->googlemaps->create_map();
 			}
 		}//attractions
 
@@ -697,6 +1281,101 @@ class Travel extends CI_Controller {
 
 			}else if (isset($place) && !empty($place) && $place == "kaohsiung") {
 				$view_data["place"] = "高雄";
+				$view_data["travel"] = "美食";
+
+				$where = array(
+					'id' => $i,
+					'type' => 1
+				);
+				$datas = $this->travel_model->get_once($place, $where);
+
+				$view_data["Id"] = $i;//景點ID
+				$view_data["Name"] = $datas->Name;//名稱
+				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
+				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
+				$view_data["Tel"] = $this->noempty("電話：", $datas->Tel);//電話
+				$view_data["FullAddress"] = $this->noempty("地址：", $datas->Add);//地址
+				$PyPx = $datas->Py.",".$datas->Px;//Py經度Px緯度
+				$view_data["Driving"] = $this->noempty("如何到達：", "");//如何到達
+				$view_data["Images"] = $datas->Picture;//照片
+				$view_data["Count"] = count($datas->Picture);
+
+				$GPS = $this->noempty("", $PyPx);//GPS經緯度
+
+				$config['center'] = $GPS;
+				$config['zoom'] = '16';
+				$this->googlemaps->initialize($config);
+
+				$marker = array();
+				$marker['position'] = $GPS;
+				$this->googlemaps->add_marker($marker);
+				$view_data['map'] = $this->googlemaps->create_map();
+			}else if (isset($place) && !empty($place) && $place == "tainan") {
+				//新增以下程式 in 20180409
+				$view_data["place"] = "台南";
+				$view_data["travel"] = "美食";
+
+				$where = array(
+					'id' => $i,
+					'type' => 1
+				);
+				$datas = $this->travel_model->get_once($place, $where);
+
+				$view_data["Id"] = $i;//景點ID
+				$view_data["Name"] = $datas->Name;//名稱
+				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
+				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
+				$view_data["Tel"] = $this->noempty("電話：", $datas->Tel);//電話
+				$view_data["FullAddress"] = $this->noempty("地址：", $datas->Add);//地址
+				$PyPx = $datas->Py.",".$datas->Px;//Py經度Px緯度
+				$view_data["PyPx"] = false;//用於沒經緯度時 in 20180409
+				$view_data["Driving"] = $this->noempty("如何到達：", "");//如何到達
+				$view_data["Images"] = $datas->Picture;//照片
+				$view_data["Count"] = count($datas->Picture);
+
+				$GPS = $this->noempty("", $PyPx);//GPS經緯度
+
+				$config['center'] = $GPS;
+				$config['zoom'] = '16';
+				$this->googlemaps->initialize($config);
+
+				$marker = array();
+				$marker['position'] = $GPS;
+				$this->googlemaps->add_marker($marker);
+				$view_data['map'] = $this->googlemaps->create_map();
+			}else if (isset($place) && !empty($place) && $place == "chiayis") {//add in 20180410
+				$view_data["place"] = "嘉義縣美食";
+				$view_data["travel"] = "美食";
+
+				$where = array(
+					'id' => $i,
+					'type' => 1
+				);
+				$datas = $this->travel_model->get_once($place, $where);
+
+				$view_data["Id"] = $i;//景點ID
+				$view_data["Name"] = $datas->Name;//名稱
+				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
+				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
+				$view_data["Tel"] = $this->noempty("電話：", $datas->Tel);//電話
+				$view_data["FullAddress"] = $this->noempty("地址：", $datas->Add);//地址
+				$PyPx = $datas->Py.",".$datas->Px;//Py經度Px緯度
+				$view_data["Driving"] = $this->noempty("如何到達：", "");//如何到達
+				$view_data["Images"] = $datas->Picture;//照片
+				$view_data["Count"] = count($datas->Picture);
+
+				$GPS = $this->noempty("", $PyPx);//GPS經緯度
+
+				$config['center'] = $GPS;
+				$config['zoom'] = '16';
+				$this->googlemaps->initialize($config);
+
+				$marker = array();
+				$marker['position'] = $GPS;
+				$this->googlemaps->add_marker($marker);
+				$view_data['map'] = $this->googlemaps->create_map();
+			}else if (isset($place) && !empty($place) && $place == "chiayi") {//add in 20180410
+				$view_data["place"] = "嘉義縣";
 				$view_data["travel"] = "美食";
 
 				$where = array(
@@ -832,6 +1511,7 @@ class Travel extends CI_Controller {
 							$view_data["sys_code"] = 200;
 							$view_data["sys_msg"] = '新增成功！';
 							$this->travel_member->do_login($dataArray['email']);
+							$this->send_mail();//20180411 新增
 							redirect(base_url('memberInfo'));
 						}else {
 							$view_data['sys_code'] = 404;
@@ -925,7 +1605,6 @@ class Travel extends CI_Controller {
 
 	//會員資訊20180403
 	function memberInfo(){
-
 		$view_data = array(
 			'instructions' => '這裡可以修改自己的基本資料、查看曾經留言與喜愛的景點。',
 			'page' => 'member.php'
@@ -1047,14 +1726,9 @@ class Travel extends CI_Controller {
 		$this->load->view('layout', $view_data);
 	}
 
+
 	function test(){
-		$daraRespone = array();
-		if ($this->travel_member->chk_login_status()) {
-			$daraRespone = 200;
-		}else {
-			$daraRespone = 404;
-		}
-		echo json_encode($daraRespone);
+
 	}
 
 	function noempty($title, $value){//不等於空
@@ -1065,13 +1739,24 @@ class Travel extends CI_Controller {
 	function send_mail(){
 
 		$this->email->from('suyoungshen@gmail.com', 'Su Shen');
+		$this->email->to($this->session->userdata('user_email'));//20180411 更改
+
+		$this->email->subject("歡迎".$this->session->userdata('user_name')."加入!");//20180411 更改
+		$this->email->message("
+		<h2 style='color:red;font-weight:bold;'>恭喜".$this->session->userdata('user_name')."註冊成功</h2>
+		<p>您可透過連結到網站<a href='https://sushentravel.tk/'>https://sushentravel.tk/</a></p>
+		");//20180411 更改
+
+		$this->email->send();
+	}
+
+	//當更新資料有錯誤時用到 in 20180413
+	function send_error_mail($ResError){
+
+		$this->email->from('suyoungshen@gmail.com', 'Su Shen');
 		$this->email->to('k90218104@gcloud.csu.edu.tw');
-
-		$this->email->subject('您好!');
-		$this->email->message('
-		<a href="https://tw.yahoo.com/">點八</a>
-		');
-
+		$this->email->subject("歡迎".$this->session->userdata('user_name')."加入!");
+		$message = $this->email->message("這幾個景點須注意：".implode(',', $ResError));
 		$this->email->send();
 	}
 }

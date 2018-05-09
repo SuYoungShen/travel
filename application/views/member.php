@@ -166,33 +166,6 @@
           </table>
         </li>
       </ul>
-
-      <div class="commentys-form">
-        <h4>Leave a comment</h4>
-        <div class="row">
-          <form action="" method="get">
-            <div class="col-xs-12 col-sm-4 col-md-4">
-              <input name="" type="text" placeholder="Whats your name *">
-              <!-- <input name="" type="text" placeholder="Whats your name *"> -->
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-              <input name="" type="email" placeholder="Whats your email *">
-              <!-- <input name="" type="email" placeholder="Whats your email *"> -->
-            </div>
-
-            <div class="col-xs-12 col-sm-4 col-md-4">
-              <input name="" type="url" placeholder="Runing a Website">
-            </div>
-            <div class="clearfix"></div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-              <textarea name="" cols="" rows=""  placeholder="Whats in your mind"></textarea>
-            </div>
-            <div class="text-center">
-              <input type="button" value="Post Comment">
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
   </div>
 </main>

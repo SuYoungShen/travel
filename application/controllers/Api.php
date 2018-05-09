@@ -8,6 +8,7 @@ class Api extends CI_Controller {
 		parent::__construct();
 		$this->load->model('travel_model');
 		$this->load->model('travel_member');
+		$this->load->model('bs_model');
 	}
 
   function third_Fb_Login(){
@@ -29,7 +30,6 @@ class Api extends CI_Controller {
           $view_data["sys_code"] = 200;
           $view_data["sys_msg"] = '新增成功！';
           $this->travel_member->do_login($dataArray['email']);
-					redirect(base_url(''));
         }else {
           $view_data['sys_code'] = 404;
           $view_data['sys_msg'] = '新增失敗...?';
@@ -88,6 +88,8 @@ class Api extends CI_Controller {
 							// $view_data["sys_code"] = 200;
 							// $view_data["sys_msg"] = '新增成功！';
 							$this->travel_member->do_login($dataArray['email']);
+
+							$this->send_mail();//20180411 新增
 							redirect(base_url(''));
 						}else {
 							$view_data['sys_code'] = 404;
@@ -287,14 +289,16 @@ class Api extends CI_Controller {
 	function send_mail(){
 
 		$this->email->from('suyoungshen@gmail.com', 'Su Shen');
-		$this->email->to('k90218104@gcloud.csu.edu.tw');
+		$this->email->to($this->session->userdata('user_email'));//20180411 更改
 
-		$this->email->subject('您好!');
-		$this->email->message('
-		<a href="https://tw.yahoo.com/">點八</a>
-		');
+		$this->email->subject("歡迎".$this->session->userdata('user_name')."加入!");
+		$this->email->message("
+		<h2 style='color:red;font-weight:bold;'>恭喜".$this->session->userdata('user_name')."註冊成功</h2>
+		<p>您可透過連結到網站<a href='https://sushentravel.tk/'>https://sushentravel.tk/</a></p>
+		");//20180411 更改
 
 		$this->email->send();
+
 	}
 }
 ?>

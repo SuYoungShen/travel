@@ -61,6 +61,14 @@ $route['tainan/(:any)'] = function($place){
     return "travel/tainan/".$place;
   }
 };
+
+//新增 in 20180410
+$route['chiayi'] = 'travel/chiayi';//嘉義縣
+$route['chiayi/(:any)'] = 'travel/chiayi/$1';//嘉義縣
+$route['chiayis'] = 'travel/chiayis';//嘉義市
+$route['chiayis/(:any)'] = 'travel/chiayis/$1';//嘉義市
+//新增 in 20180410
+
 $route["alltaiwan"] = 'travel/alltaiwan';
 
 $route["privacy"] = 'travel/privacy';//20180402隱私權
@@ -82,10 +90,20 @@ $route['delete_Am'] = 'api/delete_Am';//20180406
 $route['user_like'] = 'api/user_like';//add like 功能 in 20180407
 $route['Att_and_UL'] = 'api/Att_and_UL';//add Att_and_UL 功能 in 20180409
 $route['delete_UL'] = 'api/delete_UL';//add delete_UL 功能 in 20180409
+$route['delete_place'] = 'api/delete_place';//add delete_place 功能 in 20180430
 
 $route['test'] = 'travel/test';//20180331測試業面
 
+$route['backstage'] = 'backstage/index';//20180416 add 後台
+$route['place'] = 'backstage/place';//20180424 add 地區頁面
+$route['attractions'] = 'backstage/attractions';//20180424 add 景點資訊頁面
+$route['food'] = 'backstage/food';//20180424 add 美食資訊頁面
+
+$route['do_place'] = 'Api_backstage/do_place';//編輯、刪除地區用 in 20180506
+$route['do_attractions'] = 'Api_backstage/do_attractions';//編輯、刪除景點資訊用 in 20180509
+
 $route['food_place'] = 'travel/food_place';
+
 $route['default_controller'] = 'travel/';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
