@@ -82,12 +82,13 @@ class Backstage extends CI_Controller {
 			//add Update_Date in 20180509
 			$select = 'id, Name , Opentime, Tel, Add, Update_Date';
 			$where = array('Type'=> '0');//0=景點
+			
 			$view_data['attractions'] = $this->bs_model->get_once_field($view_data['place'][0]['en_place'], $where, $select);
 			//景點資訊(DataTable) in 20180507
 			$this->load->view('backstage/layout', $view_data);
 		}else {
 			//景點資訊(DataTable) in 20180507
-			//add Update_Date in 20180509			
+			//add Update_Date in 20180509
 			$select = 'id, Name , Opentime, Tel, Add, Update_Date';
 			$where = array('Type'=> '0');
 			$attractions = $this->bs_model->get_once_field($this->input->post('place'), $where, $select);
