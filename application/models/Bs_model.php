@@ -14,7 +14,7 @@ class Bs_model extends CI_Model {
 
   //20180406取得特定欄位
   public function get_once_field($table, $where, $select){
-    $this->db->select($select);
+    $this->db->select($select); 
     return $this->db->get_where($table, $where)->result_array();
   }
 
