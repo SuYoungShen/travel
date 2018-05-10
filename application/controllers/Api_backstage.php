@@ -68,4 +68,57 @@ class Api_backstage extends CI_Controller{
     echo json_encode($view_data);
   }//do_attractions
 
+  //add 刪除、編輯景點資訊 in 20180510
+  function de_ed_att(){
+    $PostRule = array(
+      'type' => $this->input->post('type'),
+      'rule' => $this->input->post('rule')
+    );
+    $PostData = array(
+      'id' => $this->input->post('id'),
+      'place' => $this->input->post('place')
+    );
+
+    if (!empty($PostData['id'])) {
+      if ($PostRule['rule'] == "Delete") {
+        $where = "id="."'".$PostData['id']."' && Type='".$PostRule['type']."'";
+        if ($this->bs_model->delete($PostData['place'], $where)) {
+          $view_data['sys_code'] = 200;
+          $view_data['sys_title'] = '成功';
+          $view_data['sys_msg'] = "恭喜刪除成功!!!";
+          $view_data['status'] = 'warning';
+
+        }else {
+          $view_data['sys_code'] = 404;
+          $view_data['sys_title'] = '失敗';
+          $view_data['sys_msg'] = "刪除地區失敗!!!";
+          $view_data['status'] = 'error';
+        }
+        $this->output->set_content_type('application/json')->set_output(json_encode($view_data));
+      }else if($PostRule['rule'] == 'Edit'){
+
+        $dataArray = array(
+          'Description' => $this->input->post('Description'),
+          'Opentime' => $this->input->post('Opentime'),
+          'Tel' => $this->input->post('Tel'),
+          'Add' => $this->input->post('Add')
+        );
+
+        $where = "id="."'".$PostData['id']."' && Type='".$PostRule['type']."'";
+        if ($this->bs_model->update($PostData['place'], $dataArray, $where)) {
+          $view_data['sys_code'] = 200;
+          $view_data['sys_title'] = '成功';
+          $view_data['sys_msg'] = "恭喜編輯成功!!!";
+          $view_data['status'] = 'success';
+
+        }else {
+          $view_data['sys_code'] = 404;
+          $view_data['sys_title'] = '失敗';
+          $view_data['sys_msg'] = "刪除地區失敗!!!";
+          $view_data['status'] = 'error';
+        }
+        echo json_encode($view_data);
+      }
+    }
+  }//de_ed_att
 }
