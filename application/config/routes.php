@@ -101,6 +101,7 @@ $route['food'] = 'backstage/food';//20180424 add 美食資訊頁面
 
 $route['do_place'] = 'Api_backstage/do_place';//編輯、刪除地區用 in 20180506
 $route['do_attractions'] = 'Api_backstage/do_attractions';//編輯、刪除景點資訊用 in 20180509
+$route['de_ed_att'] = 'Api_backstage/de_ed_att';//編輯、刪除景點資訊用 in 20180510
 
 $route['food_place'] = 'travel/food_place';
 
