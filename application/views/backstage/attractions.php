@@ -71,13 +71,43 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    var DataTable = $('#bootstrap-data-table').DataTable();
 
-  
-
+    $('#select').change(function(event){
+      $.ajax({
+        url: 'attractions',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          place: $(this).val()
+        }
+      })
+      .done(function(ok) {
+        console.log('ok');
+        DataTable.rows().remove().draw(false);
+        $(ok).each(function(index, val) {
+          var row = DataTable.row.add([//add td 內容 in 20180507
+            val.Name,
+            val.Opentime,
+            val.Tel,
+            val.Add,
+            val.Update_Date//add in 20180509
+          ]).draw(false).nodes();//nodes get tr attr  in 20180507
+          $(row).attr('data-id', val.id);//增加被點選tr得屬性  in 20180507
+        });
+          // chick_tr();
+      })
+      .fail(function(error) {
+        console.log('error');
+        console.log(error);
+      });
+    });
     //add 個別景點資訊 in 20180509
-    $('tr').on('click', function (event) {
+    $('#bootstrap-data-table tbody').on( 'click', 'tr', function (event) {
+
       var id = $(this).data('id');
       var place = $("#select").val();
+
       if (id == "") {
         swal(
           '有錯誤!',
@@ -101,43 +131,76 @@
           swal({
             title: "景點-"+ResOk.one_att.Name,
             imageUrl: ResOk.one_att.Picture,
-            html:"<p class='bg-info' style='font-size:20px;color:white'>"+ResOk.one_att.Description+"</p><p class='bg-danger text-left' style='color:white;'>開放時間："+ResOk.one_att.Opentime+"<br/>電話："+ResOk.one_att.Tel+"<br/>地址："+ResOk.one_att.Add+"</p>",
+            html:
+            "<textarea id='Description' class='swal2-textarea bg-info' style='color:white;'>"+ResOk.one_att.Description+"</textarea>"+
+            "開放時間：<input id='Opentime' class='swal2-input bg-danger text-left' style='color:white;' value='"+ResOk.one_att.Opentime+"'>"+
+            "電話：<input id='Tel' class='swal2-input bg-danger text-left' style='color:white;' value='"+ResOk.one_att.Tel+"'>"+
+            "地址：<input id='Add' class='swal2-input bg-danger text-left' style='color:white;' value='"+ResOk.one_att.Add+"'>",
             imageAlt: 'Custom image',
             showCancelButton: true,
-            cancelButtonText:　"關閉",
-            cancelButtonColor: '#3085d6',
+            cancelButtonText:　"更新",
+            cancelButtonColor: 'green',
             confirmButtonText: '刪除景點',
             confirmButtonColor: '#d33'
           }).then((result) => {
-            if (result.value) {
-              // $.ajax({
-              //   url: 'delete_UL',
-              //   type: 'POST',
-              //   dataType: 'json',
-              //   data: {
-              //     like_id: res.user_like[0].id,//更新成此格式 in 20180409
-              //     place_id: res.user_like[0].place_id//更新成此格式 in 20180409
-              //   }
-              // })
-              // .done(function(resOK) {
-                // if(resOK.sys_code == 200 || resOK.sys_code == 404){
-                //   swal(
-                //     resOK.sys_title,
-                //     resOK.sys_msg,
-                //     resOK.status
-                //   ).then(function(){
-                //     location.reload();
-                //   });
-                // }//End if
-              // });//End done
-            }
-          });
-        })//done
-        .fail(function(ResError) {
-          console.log("error");
-          console.log(ResError);
-        });
-      }
-    });
+            if (result.value) {//刪除
+              $.ajax({
+                url: '../de_ed_att',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                  id: id,
+                  place: place,
+                  type: 0,
+                  rule: 'Delete'
+                }
+              })
+              .done(function(resOK) {
+              if(resOK.sys_code == 200 || resOK.sys_code == 404){
+                swal(
+                  resOK.sys_title,
+                  resOK.sys_msg,
+                  resOK.status
+                ).then(function(){
+                  location.reload();
+                });
+              }//End if
+              });//End done
+            }else if(result.dismiss === swal.DismissReason.cancel) {//編輯
+
+              $.ajax({
+                url: '../de_ed_att',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                  id: id,
+                  place: place,
+                  Description: $('#Description').val(),
+                  Opentime: $('#Opentime').val(),
+                  Tel: $('#Tel').val(),
+                  Add: $('#Add').val(),
+                  type: 0,
+                  rule: 'Edit'
+                }
+              })
+              .done(function(resOK) {
+                if(resOK.sys_code == 200 || resOK.sys_code == 404){
+                  swal(
+                    resOK.sys_title,
+                    resOK.sys_msg,
+                    resOK.status
+                  ).then(function(){
+                    location.reload();
+                  });
+                }//End if
+              }).fail(function(ResError) {
+                console.log("error");
+                console.log(ResError);
+              });//End done
+            }//End 編輯
+          });//End Result
+        });//End done
+      }//End else
+    });//End tr
   });
 </script>
