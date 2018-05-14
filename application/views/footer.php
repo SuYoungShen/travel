@@ -9,21 +9,23 @@
   <!-- nav -->
   <nav role="footer-nav">
     <ul>
-      <li><a href="index.html" title="Work">Work</a></li>
-      <li><a href="about.html" title="About">About</a></li>
-      <li><a href="blog.html" title="Blog">Blog</a></li>
-      <li><a href="contact.html" title="Contact">Contact</a></li>
+      <?php if ($this->session->userdata('login_status') === true) { ?>
+      <li><a href="memberInfo" title="Member">會員資訊</a></li>
+      <li><a href="logout" title="Logout">登出</a></li>
+      <?php }else{ ?>
+      <li><a href="login" title="Work">會員登入</a></li>
+      <?php }?>
     </ul>
   </nav>
   <!-- nav -->
 
-  <ul role="social-icons">
+  <!-- <ul role="social-icons">
     <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
     <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
     <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
     <li><a href="#"><i class="fa fa-flickr" aria-hidden="true"></i></a></li>
-  </ul>
-  <p class="copy-right">&copy; 2015  avana LLC.. All rights Resved</p>
+  </ul> -->
+  <p class="copy-right">&copy; 2018  ST Su Shen Travel</p>
 </footer>
 <!-- footer -->
 
