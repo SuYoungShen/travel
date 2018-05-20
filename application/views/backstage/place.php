@@ -60,7 +60,7 @@
               </div><!-- card-footer -->
             </form>
           </div>
-        </div><!-- col-lg-6 -->
+        </div><!-- col-lg-12 -->
 
       <div class="col-lg-12">
         <div class="card">
