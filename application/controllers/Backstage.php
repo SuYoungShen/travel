@@ -71,6 +71,12 @@ class Backstage extends CI_Controller {
 			'page' => 'attractions.php'
 		);
 
+		if ($this->input->post('rule') == "new_att") {
+
+			$place = $this->input->post('select');//選擇那個地區 in 20180520
+			$this->do_upload($place, 'att');
+		}
+
 		//select 用 in 20180507
 		$select = 'ch_place , en_place';
 		$where = array('1'=> 1);
@@ -82,7 +88,7 @@ class Backstage extends CI_Controller {
 			//add Update_Date in 20180509
 			$select = 'id, Name , Opentime, Tel, Add, Update_Date';
 			$where = array('Type'=> '0');//0=景點
-			
+
 			$view_data['attractions'] = $this->bs_model->get_once_field($view_data['place'][0]['en_place'], $where, $select);
 			//景點資訊(DataTable) in 20180507
 			$this->load->view('backstage/layout', $view_data);
@@ -96,5 +102,32 @@ class Backstage extends CI_Controller {
 			echo json_encode($attractions);
 		}
   }
+	//上傳圖片功能 in 20180520
+  function do_upload($place, $options){
+
+		$path = './assets/images/'.$place.'/'.$options.'/';
+		if (!file_exists($path)) {
+			mkdir($path, 0777, true);
+		}
+
+    $config['upload_path']          = $path;
+    $config['allowed_types']        = 'gif|jpg|png';
+    // // $config['max_size']             = 100;
+    // // $config['max_width']            = 1024;
+    // // $config['max_height']           = 768;
+
+    $this->load->library('upload', $config);
+    //
+    if (!$this->upload->do_upload('file-input'))
+    {
+      $error = array('error' => $this->upload->display_errors());
+      echo json_encode($error);
+    }
+    else
+    {
+      $data = array('upload_data' => $this->upload->data());
+      echo json_encode($data);
+    }
+  }//do_upload
 }
 ?>
