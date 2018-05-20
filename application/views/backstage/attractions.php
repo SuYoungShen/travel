@@ -21,6 +21,79 @@
       <div class="content mt-3">
           <div class="animated fadeIn">
               <div class="row">
+                <!-- Add 新版面 in 20180520 -->
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <strong>新增</strong>景點資訊
+                    </div>
+                    <form  method="post" id="form" enctype="multipart/form-data" class="form-horizontal">
+                      <input type="hidden" name="rule" value="new_att">
+                      <div class="card-body card-block">
+                        <div class="row form-group">
+                            <div class="col col-md-1"><label for="select" class=" form-control-label">選擇地區</label></div>
+                            <div class="col-12 col-md-2">
+                              <select name="select" id="select" class="form-control btn btn-outline-primary btn-block">
+                                <?php foreach ($place as $key => $value){ ?>
+                                  <option value="<?=$value['en_place'];?>"><?=$value['ch_place'];?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          <!-- </div>
+                        <div class="row form-group"> -->
+                          <div class="col col-md-1"><label for="new_att_name" class=" form-control-label">景點名</label></div>
+                          <div class="col-12 col-md-3">
+                            <input type="text" id="new_att_name" name="new_att_name" placeholder="請輸入景點名" class="form-control">
+                            <small class="form-text text-muted">*必填</small>
+                          </div>
+                        <!-- </div>
+                        <div class="row form-group"> -->
+                          <div class="col col-md-1"><label for="Opentime" class=" form-control-label">開放時間</label></div>
+                          <div class="col-12 col-md-4">
+                            <input type="text" id="Opentime" name="Opentime" placeholder="請輸入開放時間" class="form-control">
+                            <small class="form-text text-muted">*必填</small>
+                          </div>
+                        </div>
+
+                        <div class="row form-group">
+                          <div class="col col-md-1"><label for="Tel" class=" form-control-label">電話</label></div>
+                          <div class="col-12 col-md-5">
+                            <input type="tel" id="Tel" name="Tel" placeholder="請輸入電話" class="form-control">
+                            <small class="form-text text-muted">*必填</small>
+                          </div>
+                        <!-- </div>
+                        <div class="row form-group"> -->
+                          <div class="col col-md-1"><label for="Add" class=" form-control-label">地址</label></div>
+                          <div class="col-12 col-md-5">
+                            <input type="text" id="Add" name="Add" placeholder="請輸入景點名" class="form-control">
+                            <small class="form-text text-muted">*必填</small>
+                          </div>
+                        </div>
+                        <div class="row form-group">
+                          <div class="col col-md-1"><label for="Description" class=" form-control-label">簡介</label></div>
+                          <div class="col-12 col-md-11">
+                            <textarea id='Description' class="form-control"></textarea>
+                            <small class="form-text text-muted">*必填</small>
+                          </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-1"><label for="file-input" class="form-control-label">上傳照片</label></div>
+                            <div class="col-12 col-md-9"><input type="file" id="file-input" name="file-input" class="form-control-file"></div>
+                          </div>
+                      </div><!-- card-body -->
+                      <div class="card-footer">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                          <i class="fa fa-dot-circle-o"></i> 送出
+                        </button>
+                        <button type="reset" class="btn btn-danger btn-sm">
+                          <i class="fa fa-ban"></i> 重填
+                        </button>
+                      </div><!-- card-footer -->
+                    </form>
+                  </div>
+                </div><!-- col-lg-12 -->
+                <!-- Add 新版面 in 20180520 -->
+
                 <div class="col-md-12">
                   <div class="card">
                     <div class="card-header">
@@ -83,7 +156,6 @@
         }
       })
       .done(function(ok) {
-        console.log('ok');
         DataTable.rows().remove().draw(false);
         $(ok).each(function(index, val) {
           var row = DataTable.row.add([//add td 內容 in 20180507
@@ -202,5 +274,6 @@
         });//End done
       }//End else
     });//End tr
+    
   });
 </script>
