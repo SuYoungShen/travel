@@ -92,8 +92,6 @@ $route['Att_and_UL'] = 'api/Att_and_UL';//add Att_and_UL 功能 in 20180409
 $route['delete_UL'] = 'api/delete_UL';//add delete_UL 功能 in 20180409
 $route['delete_place'] = 'api/delete_place';//add delete_place 功能 in 20180430
 
-$route['test'] = 'travel/test';//20180331測試業面
-
 $route['backstage'] = 'backstage/index';//20180416 add 後台
 $route['place'] = 'backstage/place';//20180424 add 地區頁面
 $route['attractions'] = 'backstage/attractions';//20180424 add 景點資訊頁面
@@ -102,6 +100,9 @@ $route['food'] = 'backstage/food';//20180424 add 美食資訊頁面
 $route['do_place'] = 'Api_backstage/do_place';//編輯、刪除地區用 in 20180506
 $route['do_attractions'] = 'Api_backstage/do_attractions';//編輯、刪除景點資訊用 in 20180509
 $route['de_ed_att'] = 'Api_backstage/de_ed_att';//編輯、刪除景點資訊用 in 20180510
+
+$route['test'] = 'Api_backstage/do_upload';
+
 
 $route['food_place'] = 'travel/food_place';
 
