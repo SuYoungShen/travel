@@ -1,6 +1,6 @@
 window.fbAsyncInit = function() {
   FB.init({
-    appId      : '366624627154059',
+    appId      : '224427218323289',
     cookie     : true,
     xfbml      : true,
     version    : 'v2.12'
@@ -34,7 +34,7 @@ $('.btn-face').click(function(event) {
             if(res.sys_code == 200){
 
               window.setTimeout(function(){
-                location.href = "https://sushentravel.tk/memberInfo";//20180411 reload()->href
+                location.href = "https://localhost/travel/";//20180411 reload()->href
               }, 100);
             }else{
               swal(
