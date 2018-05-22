@@ -6,5 +6,5 @@
     "remotePath": "/var/www/html/",
     "sshKeyFile": "C:/Users/Shen/Desktop/travel.ppk",
     "passphrase": "12345678",
-    "uploadOnSave": true
+    /* "uploadOnSave": true */
 }
