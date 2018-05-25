@@ -2,7 +2,7 @@
 <footer role="footer">
   <!-- logo -->
   <h1>
-    <a href="index.html" title="avana LLC"><img src="assets/images/logo.png" title="avana LLC" alt="avana LLC"/></a>
+    <a href="<?=base_url();?>" title="ST"><img src="assets/images/logo.png" title="ST" alt="ST"/></a>
   </h1>
   <!-- logo -->
 
