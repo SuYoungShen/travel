@@ -68,8 +68,20 @@
             <?=$Driving;?>
           </p>
           <!-- 更新成以下程式 in 20180409 -->
-          <?=!isset($PyPx)?$map['html']:"";?>
-        </iframe>
+          <?php //isset($PyPx)?$map['html']:"";?>
+
+          <!-- 因CI google map 有點問題，所以更新成以下程式 in 20180526 -->
+          <iframe width="100%" height="450" frameborder="0" style="border:0"
+            src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCs_gPkgU5QZwK1yc8DF_ui-pkruWVGx2A&q=<?=$Name;?>&zoom=16&center=<?=$map['markers']['marker_0']['latitude'].','.$map['markers']['marker_0']['longitude'];?>"
+            allowfullscreen>
+          </iframe>
+
+          <!-- <iframe class="col-lg-12"
+      frameborder="0"
+      style="border:0"
+      src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCs_gPkgU5QZwK1yc8DF_ui-pkruWVGx2A&q=臺北101觀景台&zoom=14&center=25.0337915,121.5646463"
+      allowfullscreen> -->
+  </iframe>
         <!-- <a href="https://www.google.com.tw/maps/place/屏東市大洲里65號">S</a> -->
         </div>
 
