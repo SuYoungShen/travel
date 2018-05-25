@@ -8,7 +8,7 @@ class Travel extends CI_Controller {
 		parent::__construct();
 		$this->load->model('travel_model');
 		$this->load->model('travel_member');
-	
+
 	}
 
 	function index()
