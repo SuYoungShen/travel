@@ -545,8 +545,17 @@ class Travel extends CI_Controller {
 			$travel = $_POST["travel"];
 
 			if (isset($travel) && !empty($travel) && $travel == "attractions") {
+				//因更改https時，file_get_contents會有問題，所以加以下這段 in 20180526
+				$arrContextOptions=array(
+					"ssl"=>array(
+						"verify_peer"=>false,
+						"verify_peer_name"=>false
+					)
+				);
 
-				$url = file_get_contents(base_url('assets/file/chiayi_att.json'));
+				$url = file_get_contents(base_url('assets/file/chiayi_att.json'), FALSE, stream_context_create($arrContextOptions));
+				//因更改https時，file_get_contents會有問題，所以加以上這段 in 20180526
+
 				if ($url) {//判斷是否抓取成功
 					$data = json_decode($url);
 
