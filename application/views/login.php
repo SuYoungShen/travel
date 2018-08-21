@@ -6,7 +6,7 @@
 	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="https://colorlib.com/etc/lf/Login_v5/images/icons/favicon.ico">
+	<link rel="icon" type="image/png" href="assets/images/favicon.ico">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="assets/login/files/css/bootstrap.min.css">
 <!--===============================================================================================-->
@@ -54,10 +54,10 @@
 						<?=$form_title;?>
 					</span>
 
-					<a href="javascript: void(0)" class="btn-face m-b-20">
+					<!-- <a href="javascript: void(0)" class="btn-face m-b-20">
 						<i class="fa fa-facebook-official"></i>
 						Facebook
-					</a>
+					</a> -->
 
 					<!-- <a href="https://colorlib.com/etc/lf/Login_v5/index.html#" class="btn-google m-b-20">
 						<img src="assets/login/files/image/icon-google.png" alt="GOOGLE">

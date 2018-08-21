@@ -72,7 +72,7 @@
 
           <!-- 因CI google map 有點問題，所以更新成以下程式 in 20180526 -->
           <iframe width="100%" height="450" frameborder="0" style="border:0"
-            src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCs_gPkgU5QZwK1yc8DF_ui-pkruWVGx2A&q=<?=$Name;?>&zoom=16&center=<?=$map['markers']['marker_0']['latitude'].','.$map['markers']['marker_0']['longitude'];?>"
+            src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC7bEc4gfvxhzElX2_S68RocM_s-NcsOgs&q=<?=$Name;?>&zoom=16&center=<?=$map['markers']['marker_0']['latitude'].','.$map['markers']['marker_0']['longitude'];?>"
             allowfullscreen>
           </iframe>
 

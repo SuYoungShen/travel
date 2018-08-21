@@ -781,7 +781,7 @@ class Travel extends CI_Controller {
 
 			if (isset($travel) && !empty($travel) && $travel == "attractions") {
 
-				$url = simplexml_load_file('http://travel_old.chiayi.gov.tw/xml/C1_376600000A.xml');
+				$url = simplexml_load_file('https://travel.chiayi.gov.tw/xml/C1_376600000A.xml');
 				$count = count($url->Infos->Info);//計算總比數
 				$data = array();
 				for ($i=0; $i < $count; $i++) {
@@ -1193,6 +1193,37 @@ class Travel extends CI_Controller {
  				$marker['position'] = $GPS;
  				$this->googlemaps->add_marker($marker);
  				$view_data['map'] = $this->googlemaps->create_map();
+			}else if(isset($place) && !empty($place) && $place == "chiayi"){//嘉義縣 in 20180821
+				$view_data["place"] = "嘉義縣";
+ 				$view_data["travel"] = "景點";
+
+				$where = array(
+					'id' => $i,
+					'type' => 0
+				);
+				$datas = $this->travel_model->get_once($place, $where);
+
+				$view_data["Id"] = $i;//景點ID
+				$view_data["Name"] = $datas->Name;//名稱
+				$view_data["Introduction"] = $this->noempty("景點簡介：", $datas->Description);//描述
+				$view_data["OpenTime"] = $this->noempty("開放時間：", $datas->Opentime);//開放時間
+				$view_data["Tel"] = $this->noempty("電話：", $datas->Tel);//電話
+				$view_data["FullAddress"] = $this->noempty("地址：", $datas->Add);//地址
+				$PyPx = $datas->Py.",".$datas->Px;//Py經度Px緯度
+				$view_data["Driving"] = $this->noempty("如何到達：", $datas->Driving);//如何到達
+				$view_data["Images"] = $datas->Picture;//照片
+				$view_data["Count"] = count($datas->Picture);
+
+				$GPS = $this->noempty("", $PyPx);//GPS經緯度
+
+				$config['center'] = $GPS;
+				$config['zoom'] = '16';
+				$this->googlemaps->initialize($config);
+
+				$marker = array();
+				$marker['position'] = $GPS;
+				$this->googlemaps->add_marker($marker);
+				$view_data['map'] = $this->googlemaps->create_map();
 			}else if(isset($place) && !empty($place) && $place == "chiayis"){//Add in 20180410
 				$view_data["place"] = "嘉義市";
  				$view_data["travel"] = "景點";
